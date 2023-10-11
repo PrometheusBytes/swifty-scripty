@@ -1,0 +1,23 @@
+import Foundation
+{% macro dirBlock directory path %}
+{% if directory.name != "QScriptUtils" %}
+    {% for file in directory.files %}
+    {% call fileBlock file path directory.name %}
+    {% endfor %}
+    {% for dir in directory.directories %}
+    {% set path %}{{ path }}/{{ dir.name }}{% endset %}
+    {% call dirBlock dir path %}
+    {% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro fileBlock file path dir %}
+{% if file.name == "Package" and file.ext == "swift" %}
+    case {{ dir | snakeToCamelCase | lowerFirstLetter }} = "{{ path }}"
+{% endif %}
+{% endmacro %}
+public enum Scripts: String, CaseIterable {
+{% for dir in groups.first.directories %}
+{% call dirBlock dir dir.name %}
+{% endfor %}
+}

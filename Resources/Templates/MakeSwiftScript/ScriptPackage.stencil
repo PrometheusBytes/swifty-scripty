@@ -1,0 +1,43 @@
+// swift-tools-version: 5.7
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "{{ argument.scriptName }}",
+    platforms: [
+        .macOS(.v13)
+    ],
+    dependencies: [
+        .package(path: "{{ argument.swiftyScriptyPath }}"),
+        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", branch: "master")
+    ],
+    targets: [
+        .executableTarget(
+            name: "{{ argument.scriptName }}",
+            dependencies: [
+                .product(name: "SwiftyScripty", package: "SwiftyScripty")
+            ],
+            path: "Sources/{{ argument.scriptName }}",
+            swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
+        .target(
+            name: "TestUtils",
+            dependencies: [
+                "{{ argument.scriptName }}",
+                "SwiftyMocky",
+                .product(name: "SwiftyScriptyTests", package: "SwiftyScripty")
+            ],
+            path: "Sources/TestUtils"
+        ),
+        .testTarget(
+            name: "{{ argument.scriptName }}Tests",
+            dependencies: [
+                "{{ argument.scriptName }}",
+                "SwiftyMocky",
+                "TestUtils",
+                .product(name: "SwiftyScripty", package: "SwiftyScripty"),
+                .product(name: "SwiftyScriptyTests", package: "SwiftyScripty")
+            ]
+        ),
+    ]
+)

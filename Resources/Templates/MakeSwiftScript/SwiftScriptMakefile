@@ -1,0 +1,38 @@
+SWIFTY_SCRIPTY_DIR := {{ swiftyScriptyDir }}
+.PHONY: list di_keys_and_mocks automated-tests tests build build_and_run
+
+list:
+	@echo "\n==========================="
+	@echo "==    Swift Scripting    =="
+	@echo "==========================="
+	@echo "==     Commands list     =="
+	@echo "==========================="
+	@echo "setup"
+	@echo "build"
+	@echo "build_and_run"
+	@echo "tests"
+
+%:
+	@:
+
+args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
+
+setup:
+	@echo "Removing Generated Code..."
+	@$(SWIFTY_SCRIPTY_DIR)/bin/CleanScript ./Sources/{{ scriptName }} ./Sources/TestUtils
+	@echo "Setting Up Script..."
+	@$(SWIFTY_SCRIPTY_DIR)/bin/SetupScript -p .
+
+tests:
+	@make setup
+	@echo "Starting tests..."
+	@swift test
+
+build:
+	@make setup
+	@swift build --configuration release
+	@cp -f .build/release/{{ scriptName }} ./{{ scriptName }}
+
+build_and_run:
+	@make build
+	@./{{ scriptName }} $(args)

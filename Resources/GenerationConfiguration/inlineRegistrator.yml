@@ -1,0 +1,9 @@
+sources:
+  - ../../Sources/SwiftyScripty
+  - ../../Sources/SwiftyScriptyTests
+templates:
+  - ../Templates/Sourcery/InlineRegistrator.stencil
+output:
+  ../../Sources/SwiftyScriptyTests/Registrator
+args:
+  className: DefaultRegistrator

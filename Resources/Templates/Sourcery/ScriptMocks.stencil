@@ -1,0 +1,34 @@
+{% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}
+{% if type.name != "AutoMockable" %}
+{% if type|!annotated:"skipKeyCreation" %}
+
+// sourcery:file:{{ type.name }}+ScriptMock
+// swiftlint:disable all
+
+import Foundation
+import SwiftyScripty
+import SwiftyMocky
+{% if argument.scriptName != "SwiftyScripty" %}
+import SwiftyScriptyTests
+import {{ argument.scriptName }}
+{% endif %}
+
+// MARK: - Mock Protocol
+
+extension {{ type.name }}Mock: ScriptMock {
+    public static var id = UUID()
+    
+    public static func resetTestValue() {
+        guard let mock = {{ type.name }}Key.value as? (any Mock) else {
+            return
+        }
+        
+        mock.resetMock()
+    }
+}
+
+// sourcery:end
+
+{% endif %}
+{% endif %}
+{% endfor %}

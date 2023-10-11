@@ -1,0 +1,19 @@
+configurations:
+  - sources:
+      - ../../Sources/SwiftyScripty
+    templates:
+      - ../Templates/Sourcery/ScriptMocks.stencil
+    output:
+      ../../Sources/SwiftyScriptyTests/Generated/MockProtocols
+    args:
+      scriptName: SwiftyScripty
+  - sources:
+      - ../../Sources/SwiftyScripty
+    templates:
+      - ../Templates/Sourcery/Mock.swifttemplate
+    output:
+      ../../Sources/SwiftyScriptyTests/Generated/Mocks
+    args:
+      import:
+        - Foundation
+        - SwiftyScripty
