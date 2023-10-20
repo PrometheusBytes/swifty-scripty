@@ -104,21 +104,18 @@ struct MakeSwiftScript: ParsableCommand {
 
     func generatePackageFile(at path: URL, name: String) -> Bool {
         guard
-            let root = repository.path(of: .root),
             let templatePath = repository.path(of: .makeSwiftScriptTemplates)
         else {
             return false
         }
 
         repository.deleteFile(at: path, name: "Package.swift")
-        // TODO: For now the path is static but will be replaced with the git swift package
         return sourceryWrapper.generateCode(
             templatePath: templatePath.appendPath("ScriptPackage.stencil"),
             sourcePath: templatePath.appendPath("ScriptPackage.stencil"),
             outputPath: path.appendPath("Package.swift"),
             args: [
-                .init(key: "scriptName", value: name),
-                .init(key: "swiftyScriptyPath", value: root.absoluteString)
+                .init(key: "scriptName", value: name)
             ]
         )
     }
