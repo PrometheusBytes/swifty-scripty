@@ -13,15 +13,9 @@ let package = Package(
         .library(
             name: "SwiftyScripty",
             targets: ["SwiftyScripty"]
-        ),
-        .library(
-            name: "SwiftyScriptyTests",
-            targets: ["SwiftyScriptyTests"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", branch: "master"),
-        .package(url: "https://github.com/jpsim/Yams", .upToNextMajor(from: "5.0.1")),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
     ],
     targets: [
@@ -30,44 +24,18 @@ let package = Package(
         
         .target(
             name: "SwiftyScripty",
-            dependencies: ["Yams"],
             path: "Sources/SwiftyScripty",
             swiftSettings: [.define("DEBUG", .when(configuration: .debug))]
-        ),
-        
-        // MARK:  Swifty Scripty Tests
-        
-        .target(
-            name: "SwiftyScriptyTests",
-            dependencies: [
-                "SwiftyScripty",
-                "SwiftyMocky"
-            ],
-            path: "Sources/SwiftyScriptyTests"
         ),
         
         // MARK:  Swifty Scripty Test Target
         
         .testTarget(
-            name: "SwiftyScriptyTestSuite",
+            name: "SwiftyScriptyTests",
             dependencies: [
-                "SwiftyScripty",
-                "SwiftyScriptyTests",
-                "SwiftyMocky"
+                "SwiftyScripty"
             ],
-            path: "Tests/SwiftyScriptyTestSuite"
-        ),
-
-        // MARK: - Clean Script
-
-        .executableTarget(
-            name: "CleanScript",
-            dependencies: [
-                "SwiftyScripty",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ],
-            path: "Sources/CleanScript",
-            swiftSettings: [.unsafeFlags(["-enable-bare-slash-regex"])]
+            path: "Tests/SwiftyScriptyTests"
         ),
 
         // MARK: - Make Swift Script

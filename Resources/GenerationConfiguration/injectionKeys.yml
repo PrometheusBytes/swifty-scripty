@@ -3,6 +3,6 @@ sources:
 templates:
   - ../Templates/Sourcery/InjectionKeys.stencil
 output:
-  ../../Sources/SwiftyScripty/InjectionKeys
+  ../../Sources/SwiftyScripty/Generated/InjectionKeys
 args:
   scriptName: SwiftyScripty

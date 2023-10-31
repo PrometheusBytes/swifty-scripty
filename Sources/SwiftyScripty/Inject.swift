@@ -2,32 +2,19 @@ import Foundation
 
 public struct InjectedValues {
     private static var current = InjectedValues()
-    private static var resetFunctions = [UUID: ()->Void]()
-    private static let lock = NSRecursiveLock()
-
-    public static func resetAllTests() {
-        resetFunctions.forEach { _, value in
-            value()
-        }
-    }
 
     public static subscript<K>(key: K.Type) -> K.Value where K: InjectionKey {
         get {
-            return key.value
-        }
-        set {
-            guard lock.lock(before: Date().addingTimeInterval(1)) else {
-                return
+            if isRunningTests {
+                return key.testValue
+            } else {
+                return key.liveValue
             }
-
-            key.value = newValue
-            lock.unlock()
         }
     }
 
-    public static subscript<T>(_ keyPath: WritableKeyPath<InjectedValues, T>) -> T {
+    public static subscript<T>(_ keyPath: KeyPath<InjectedValues, T>) -> T {
         get { current[keyPath: keyPath] }
-        set { current[keyPath: keyPath] = newValue }
     }
 
     static var isRunningTests: Bool {
@@ -35,35 +22,23 @@ public struct InjectedValues {
             return NSClassFromString("XCTest") != nil
         }
     }
-
-    public static func addResetFunction(_ function: @escaping () -> Void, for id: UUID) {
-        guard
-            isRunningTests,
-            lock.lock(before: Date().addingTimeInterval(1))
-        else {
-            return
-        }
-
-        resetFunctions[id] = function
-        lock.unlock()
-    }
 }
 
 public protocol InjectionKey: Hashable {
     associatedtype Value
 
-    static var value: Self.Value { get set }
+    static var liveValue: Self.Value { get }
+    static var testValue: Self.Value { get }
 }
 
 @propertyWrapper
 public struct Injected<T> {
-    private let keyPath: WritableKeyPath<InjectedValues, T>
+    private let keyPath: KeyPath<InjectedValues, T>
     public var wrappedValue: T {
         get { InjectedValues[keyPath] }
-        set { InjectedValues[keyPath] = newValue }
     }
 
-    public init(_ keyPath: WritableKeyPath<InjectedValues, T>) {
+    public init(_ keyPath: KeyPath<InjectedValues, T>) {
         self.keyPath = keyPath
     }
 }

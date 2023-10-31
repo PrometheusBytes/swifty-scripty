@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7F87E207-6B8B-4BF8-9ADA-6EE64123F125",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftyScriptyTests",
+        "name" : "SwiftyScriptyTests"
+      }
+    }
+  ],
+  "version" : 1
+}
