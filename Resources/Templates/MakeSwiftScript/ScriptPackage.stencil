@@ -9,8 +9,7 @@ let package = Package(
         .macOS(.v13)
     ],
     dependencies: [
-        .package(url: "https://github.com/MatteoCultrera/swifty-scripty", branch: "develop"),
-        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", branch: "master")
+        .package(url: "https://github.com/MatteoCultrera/swifty-scripty", branch: "develop")
     ],
     targets: [
         .executableTarget(
@@ -19,24 +18,13 @@ let package = Package(
                 .product(name: "SwiftyScripty", package: "swifty-scripty")
             ],
             path: "Sources/{{ argument.scriptName }}",
-            swiftSettings: [.define("DEBUG", .when(configuration: .debug))]),
-        .target(
-            name: "TestUtils",
-            dependencies: [
-                "{{ argument.scriptName }}",
-                "SwiftyMocky",
-                .product(name: "SwiftyScriptyTests", package: "swifty-scripty")
-            ],
-            path: "Sources/TestUtils"
+            swiftSettings: [.define("DEBUG", .when(configuration: .debug))]
         ),
         .testTarget(
             name: "{{ argument.scriptName }}Tests",
             dependencies: [
                 "{{ argument.scriptName }}",
-                "SwiftyMocky",
-                "TestUtils",
-                .product(name: "SwiftyScripty", package: "swifty-scripty"),
-                .product(name: "SwiftyScriptyTests", package: "swifty-scripty")
+                .product(name: "SwiftyScripty", package: "swifty-scripty")
             ]
         ),
     ]

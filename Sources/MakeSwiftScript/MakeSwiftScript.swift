@@ -53,12 +53,6 @@ struct MakeSwiftScript: ParsableCommand {
             return
         }
 
-        guard generateRegistratorFile(at: folderPath, name: name) else {
-            shell.print(color: .red, text: "ERROR: Unable to generate registrator file")
-            shell.exit(with: .errorExitCode)
-            return
-        }
-
         guard generateMainTestFile(at: folderPath, name: name) else {
             shell.print(color: .red, text: "ERROR: Unable to generate main test file")
             shell.exit(with: .errorExitCode)

@@ -10,6 +10,7 @@ list:
 	@echo "==========================="
 	@echo "di_keys_and_mocks"
 	@echo "tests"
+	@echo "build_scripts"
 
 di_keys_and_mocks:
 	@echo "Removing Generated Code..."
@@ -28,6 +29,5 @@ build_scripts:
 	@make di_keys_and_mocks
 	@swift package clean
 	@swift build --configuration release
-	@cp -f .build/release/CleanScript ./bin
 	@cp -f .build/release/MakeSwiftScript ./bin
 	@cp -f .build/release/SetupScript ./bin
