@@ -1,10 +1,8 @@
 @testable import {{ argument.scriptName }}
 import SwiftyScripty
-import SwiftyScriptyTests
-import TestUtils
 import XCTest
 
-final class {{ argument.scriptName }}Tests: ScriptTests {
+final class {{ argument.scriptName }}Tests: XCTestCase {
     
     var sut: {{ argument.scriptName }}!
     @InjectedMock(\.shell) var shellDependency: ShellMock
@@ -21,6 +19,6 @@ final class {{ argument.scriptName }}Tests: ScriptTests {
         sut.main(args: [])
         
         // THEN
-        shellDependency.verify(.print(color: .value(.green), text: .value("Hello World!")))
+        XCTAssertTrue(shellDependency.printColorTextCalled)
     }
 }

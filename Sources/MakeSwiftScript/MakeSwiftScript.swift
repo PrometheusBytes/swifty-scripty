@@ -29,14 +29,6 @@ struct MakeSwiftScript: ParsableCommand {
     @Injected(\.sourceryWrapper) var sourceryWrapper: SourceryWrapper
 
     mutating func run() throws {
-//        guard shell.askPermission(question: "WARNING: We need to kill Xcode in order to setup project, can we proceed? [y/n]") else {
-//            shell.print(color: .red, text: "Script not created")
-//            shell.exit(with: .errorExitCode)
-//            return
-//        }
-//
-//        shell.runZsh(command: "killall Xcode")
-        
         guard let folderPath = createProjectFolder(at: path, name: name) else {
             shell.print(color: .red, text: "ERROR: Unable to create project folder")
             shell.exit(with: .errorExitCode)
@@ -57,12 +49,6 @@ struct MakeSwiftScript: ParsableCommand {
 
         guard generateMainFile(at: folderPath, name: name) else {
             shell.print(color: .red, text: "ERROR: Unable to generate main file")
-            shell.exit(with: .errorExitCode)
-            return
-        }
-
-        guard generateRegistratorFile(at: folderPath, name: name) else {
-            shell.print(color: .red, text: "ERROR: Unable to generate registrator file")
             shell.exit(with: .errorExitCode)
             return
         }
