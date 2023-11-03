@@ -15,8 +15,8 @@ public protocol Repository {
     func path(of folder: Folders) -> URL?
     func append(folder: String, at rootFolder: Folders) -> URL?
     func append(folders: [String], at rootFolder: Folders) -> URL?
-    func append(folder: String, at rootFolder: URL?) -> URL?
-    func append(folders: [String], at rootFolder: URL?) -> URL?
+    func append(folder: String, atURL rootFolder: URL?) -> URL?
+    func append(folders: [String], atURL rootFolder: URL?) -> URL?
     func contentsOfDirectory(atURL: URL) throws -> [String]
 }
 
@@ -32,7 +32,6 @@ public extension Repository {
 
 struct RepositoryImpl: Repository {
     @Injected(\.shell) var shell: Shell
-    @Injected(\.configuration) var configuration: Configuration
 
     func createFolder(
         inside folder: Folders,
@@ -178,9 +177,6 @@ struct RepositoryImpl: Repository {
             return append(folder: "Templates", at: .resources)
         case .makeSwiftScriptTemplates:
             return append(folder: "MakeSwiftScript", at: .templates)
-        case .scripts:
-            guard let configuration = try? configuration.loadFromDefault() else { return nil }
-            return URL(string: configuration.customScripts)
         }
     }
 
@@ -205,7 +201,7 @@ struct RepositoryImpl: Repository {
         return url
     }
 
-    func append(folder: String, at rootFolder: URL?) -> URL? {
+    func append(folder: String, atURL rootFolder: URL?) -> URL? {
         guard let rootFolder else {
             return nil
         }
@@ -215,7 +211,7 @@ struct RepositoryImpl: Repository {
         return url
     }
 
-    func append(folders: [String], at rootFolder: URL?) -> URL? {
+    func append(folders: [String], atURL rootFolder: URL?) -> URL? {
         guard let rootFolder else {
             return nil
         }
@@ -240,7 +236,6 @@ public enum Folders: String {
     case sourceryBinary
     case templates
     case makeSwiftScriptTemplates
-    case scripts
 }
 
 public extension URL {

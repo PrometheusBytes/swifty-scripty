@@ -1,6 +1,0 @@
- files:
-   inputs:
-     - ../../Sources
-   outputs:
-     - templatePath: ../Templates/SwiftGen/ScriptEnums.stencil
-       output: ../../Sources/SwiftyScripty/Scripts.swift

@@ -19,7 +19,7 @@ args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 
 setup:
 	@echo "Removing Generated Code..."
-	@$(SWIFTY_SCRIPTY_DIR)/bin/CleanScript ./Sources/{{ scriptName }} ./Sources/TestUtils
+	@rm -rf ./Sources/{{ scriptName }}/Generated
 	@echo "Setting Up Script..."
 	@$(SWIFTY_SCRIPTY_DIR)/bin/SetupScript -p .
 

@@ -9,13 +9,14 @@ import SwiftyScripty
 {% endif %}
 
 public struct {{ type.name }}Key: InjectionKey {
-    public static var value: {{ type.name }} = {{ type.name }}Impl()
+    public static var liveValue: {{ type.name }} { {{ type.name }}Impl() }
+    public static var testValue: {{ type.name }} { _test }
+    private static var _test = {{ type.name }}Mock()
 }
 
 extension InjectedValues {
     public var {{ type.name | lowerFirstWord }}: {{ type.name }} {
         get { return Self[{{ type.name }}Key.self] }
-        set { Self[{{ type.name }}Key.self] = newValue }
     }
 }
 
