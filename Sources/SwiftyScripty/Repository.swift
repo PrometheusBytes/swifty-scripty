@@ -155,12 +155,19 @@ struct RepositoryImpl: Repository {
     func path(of folder: Folders) -> URL? {
         switch folder {
         case .root:
+            #if DEBUG
             guard let path = URL(string: #file) else { return nil }
             var rootPath = path
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .path()
+              .deletingLastPathComponent()
+              .deletingLastPathComponent()
+              .deletingLastPathComponent()
+              .path()
+            #else
+            guard let path = URL(string: Bundle.main.bundlePath) else { return nil }
+            var rootPath = path
+              .deletingLastPathComponent()
+              .path()
+            #endif
             
             if rootPath.hasSuffix("/") {
                 rootPath = String(rootPath.dropLast())
