@@ -42,23 +42,22 @@ struct SourceryWrapperImpl: SourceryWrapper {
     @Injected(\.shell)
     var shell: Shell
 
-    @Injected(\.repository)
-    var repository: Repository
-
     func generateCode(configPath: URL, args: [SourceryWrapperArguments]) -> Bool {
-        guard let binaryPath = repository.path(of: .sourceryBinary) else { return false }
-        var command = "\(binaryPath.absoluteString) --config \(configPath.absoluteString)"
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
-
-        shell.runZsh(command: command)
-        return true
+        // TODO: - Add new resource in next MR
+        return false
+//        guard let binaryPath = "" else { return false }
+//        var command = "\(binaryPath.absoluteString) --config \(configPath.absoluteString)"
+//        if !args.isEmpty {
+//            command.append(" --args ")
+//            var arguments = ""
+//            args.forEach { argument in
+//                arguments.append("\(argument.key)=\(argument.value),")
+//            }
+//            command.append(arguments)
+//        }
+//
+//        shell.runZsh(command: command)
+//        return true
     }
 
     func generateCode(
@@ -67,29 +66,31 @@ struct SourceryWrapperImpl: SourceryWrapper {
         outputPath: URL,
         args: [SourceryWrapperArguments]
     ) -> Bool {
-        guard let binaryPath = repository.path(of: .sourceryBinary) else { return false }
-        let templates = templatePaths.map { $0.absoluteString }.joined(separator: " --templates ")
-        let sources = sourcePaths.map { $0.absoluteString }.joined(separator: " --sources ")
-        
-        var command = binaryPath.absoluteString
-        command.append(" --templates \(templates)")
-        command.append(" --sources \(sources)")
-        command.append(" --output \(outputPath.absoluteString)")
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
-
-        guard shell.runZsh(command: command) == .successExitCode else {
-            return false
-        }
-        trimSourceryHeader(at: outputPath)
-
-        return true
+        // TODO: - Add new resource in next MR
+        return false
+//        guard let binaryPath = repository.path(of: .sourceryBinary) else { return false }
+//        let templates = templatePaths.map { $0.absoluteString }.joined(separator: " --templates ")
+//        let sources = sourcePaths.map { $0.absoluteString }.joined(separator: " --sources ")
+//
+//        var command = binaryPath.absoluteString
+//        command.append(" --templates \(templates)")
+//        command.append(" --sources \(sources)")
+//        command.append(" --output \(outputPath.absoluteString)")
+//        if !args.isEmpty {
+//            command.append(" --args ")
+//            var arguments = ""
+//            args.forEach { argument in
+//                arguments.append("\(argument.key)=\(argument.value),")
+//            }
+//            command.append(arguments)
+//        }
+//
+//        guard shell.runZsh(command: command) == .successExitCode else {
+//            return false
+//        }
+//        trimSourceryHeader(at: outputPath)
+//
+//        return true
     }
 
     private func trimSourceryHeader(at path: URL) {
