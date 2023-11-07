@@ -15,9 +15,7 @@ let package = Package(
             targets: ["SwiftyScripty"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
-    ],
+    dependencies: [],
     targets: [
         
         // MARK: - Swifty Scripty
@@ -37,28 +35,6 @@ let package = Package(
                 "SwiftyScripty"
             ],
             path: "Tests/SwiftyScriptyTests"
-        ),
-
-        // MARK: - Make Swift Script
-
-        .executableTarget(
-            name: "MakeSwiftScript",
-            dependencies: [
-                "SwiftyScripty",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ],
-            path: "Sources/MakeSwiftScript"
-        ),
-
-        // MARK: - Setup Script
-
-        .executableTarget(
-            name: "SetupScript",
-            dependencies: [
-                "SwiftyScripty",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ],
-            path: "Sources/SetupScript"
         )
     ]
 )

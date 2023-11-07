@@ -18,7 +18,6 @@ final class SwiftPackageTests: XCTestCase {
         // GIVEN
         let reachCommand = "cd \(Constants.path.absoluteString)"
         let initializeCommand = "swift package init --type executable"
-        let command = "\(reachCommand);\(initializeCommand)"
 
         // WHEN
         sut.initialize(at: Constants.path)
