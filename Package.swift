@@ -25,6 +25,7 @@ let package = Package(
         .target(
             name: "SwiftyScripty",
             path: "Sources/SwiftyScripty",
+            resources: [.copy("Resources")],
             swiftSettings: [.define("DEBUG", .when(configuration: .debug))]
         ),
         
