@@ -6,6 +6,7 @@ import Foundation
 
 public class ShellMock: Shell {
 
+
     public init() {}
 
     //MARK: - bash

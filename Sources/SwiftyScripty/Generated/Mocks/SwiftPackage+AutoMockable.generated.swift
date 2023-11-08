@@ -6,6 +6,7 @@ import Foundation
 
 public class SwiftPackageMock: SwiftPackage {
 
+
     public init() {}
 
     //MARK: - initialize

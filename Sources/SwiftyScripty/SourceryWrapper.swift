@@ -96,7 +96,7 @@ struct SourceryWrapperImpl: SourceryWrapper {
     }
 
     private func trimSourceryHeader(at path: URL) {
-        guard let fileContent = try? String(contentsOfFile: path.absoluteString) else {
+        guard let fileContent = try? String(contentsOfFile: path.getFullPath()) else {
             return
         }
 
@@ -105,7 +105,7 @@ struct SourceryWrapperImpl: SourceryWrapper {
         let text = fileLines.joined(separator: "\n")
 
         do {
-            try text.write(toFile: path.absoluteString, atomically: true, encoding: .utf8)
+            try text.write(toFile: path.getFullPath(), atomically: true, encoding: .utf8)
         } catch {
             print(error.localizedDescription)
         }
