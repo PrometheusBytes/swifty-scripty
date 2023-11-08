@@ -6,6 +6,7 @@ import Foundation
 
 public class GitMock: Git {
 
+
     public init() {}
     public var srcRoot: String?
 

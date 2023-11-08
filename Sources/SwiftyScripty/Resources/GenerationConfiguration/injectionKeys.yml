@@ -1,0 +1,8 @@
+sources:	
+  - ../..
+templates:
+  - ../Templates/InjectionKeys.stencil
+output:	
+  ../../Generated/InjectionKeys
+args:
+  scriptName: SwiftyScripty	
