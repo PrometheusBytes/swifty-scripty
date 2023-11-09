@@ -41,13 +41,16 @@ public extension SourceryWrapper {
 struct SourceryWrapperImpl: SourceryWrapper {
     @Injected(\.shell)
     var shell: Shell
-
-    @Injected(\.repository)
-    var repository: Repository
+    
+    let binaryPath = Bundle.module.path(
+        forResource: "sourcery",
+        ofType: nil,
+        inDirectory: "Resources/Binaries"
+    )
 
     func generateCode(configPath: URL, args: [SourceryWrapperArguments]) -> Bool {
-        guard let binaryPath = repository.path(of: .sourceryBinary) else { return false }
-        var command = "\(binaryPath.absoluteString) --config \(configPath.absoluteString)"
+        guard let binaryPath else { return false }
+        var command = "\(binaryPath) --config \(configPath.getFullPath())"
         if !args.isEmpty {
             command.append(" --args ")
             var arguments = ""
@@ -67,14 +70,14 @@ struct SourceryWrapperImpl: SourceryWrapper {
         outputPath: URL,
         args: [SourceryWrapperArguments]
     ) -> Bool {
-        guard let binaryPath = repository.path(of: .sourceryBinary) else { return false }
-        let templates = templatePaths.map { $0.absoluteString }.joined(separator: " --templates ")
-        let sources = sourcePaths.map { $0.absoluteString }.joined(separator: " --sources ")
-        
-        var command = binaryPath.absoluteString
+        guard let binaryPath else { return false }
+        let templates = templatePaths.map { $0.getFullPath() }.joined(separator: " --templates ")
+        let sources = sourcePaths.map { $0.getFullPath() }.joined(separator: " --sources ")
+
+        var command = binaryPath
         command.append(" --templates \(templates)")
         command.append(" --sources \(sources)")
-        command.append(" --output \(outputPath.absoluteString)")
+        command.append(" --output \(outputPath.getFullPath())")
         if !args.isEmpty {
             command.append(" --args ")
             var arguments = ""
@@ -93,7 +96,7 @@ struct SourceryWrapperImpl: SourceryWrapper {
     }
 
     private func trimSourceryHeader(at path: URL) {
-        guard let fileContent = try? String(contentsOfFile: path.absoluteString) else {
+        guard let fileContent = try? String(contentsOfFile: path.getFullPath()) else {
             return
         }
 
@@ -102,7 +105,7 @@ struct SourceryWrapperImpl: SourceryWrapper {
         let text = fileLines.joined(separator: "\n")
 
         do {
-            try text.write(toFile: path.absoluteString, atomically: true, encoding: .utf8)
+            try text.write(toFile: path.getFullPath(), atomically: true, encoding: .utf8)
         } catch {
             print(error.localizedDescription)
         }

@@ -6,6 +6,7 @@ import Foundation
 
 public class SourceryWrapperMock: SourceryWrapper {
 
+
     public init() {}
 
     //MARK: - generateCode

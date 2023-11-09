@@ -16,9 +16,8 @@ final class SwiftPackageTests: XCTestCase {
 
     func test_initialize_thenCallsCorrectCommand() {
         // GIVEN
-        let reachCommand = "cd \(Constants.path.absoluteString)"
+        let reachCommand = "cd \(Constants.path.getFullPath())"
         let initializeCommand = "swift package init --type executable"
-        let command = "\(reachCommand);\(initializeCommand)"
 
         // WHEN
         sut.initialize(at: Constants.path)
