@@ -6,7 +6,7 @@ public enum Versions: String, CaseIterable {
     case patch
 }
 
-public struct Version: Equatable, Comparable {
+public struct Version: Equatable, Comparable, CustomStringConvertible {
     let major: Int
     let minor: Int
     let patch: Int
@@ -17,6 +17,10 @@ public struct Version: Equatable, Comparable {
         self.major = major
         self.minor = minor ?? 0
         self.patch = patch ?? 0
+    }
+
+    public var description: String {
+        "\(major).\(minor).\(patch)"
     }
 
     /// A way to init a version using a dictionary
