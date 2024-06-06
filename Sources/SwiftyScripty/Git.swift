@@ -9,7 +9,7 @@ import Foundation
 public protocol Git {
     
     /// The root directory of the Git repository.
-    var srcRoot: String? { get }
+    var root: String? { get }
 
     /// Checks if there are any changes in the Git repository.
     ///
@@ -29,7 +29,7 @@ struct GitImpl: Git {
     /// The shell utility used to execute commands.
     @Injected(\.shell) var shell: Shell
 
-    var srcRoot: String? {
+    var root: String? {
         shell.zsh(command: "git rev-parse --show-toplevel")
     }
 

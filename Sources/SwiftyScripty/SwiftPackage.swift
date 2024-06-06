@@ -5,6 +5,7 @@ import Foundation
 /// A protocol for initializing Swift packages.
 ///
 /// This protocol defines a method for initializing a Swift package at a specified path.
+//sourcery: AutoMockable
 public protocol SwiftPackage {
     /// Initializes a Swift package at the specified path.
     ///

@@ -8,7 +8,7 @@ public class GitMock: Git {
 
 
     public init() {}
-    public var srcRoot: String?
+    public var root: String?
 
     //MARK: - hasRepoChanges
 
