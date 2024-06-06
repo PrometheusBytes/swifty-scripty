@@ -24,5 +24,6 @@ final class SwiftPackageTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(shellDependency.runZshCommandCalled)
+        XCTAssertEqual(shellDependency.runZshCommandReceivedCommand, "\(reachCommand);\(initializeCommand)")
     }
 }
