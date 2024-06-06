@@ -42,6 +42,7 @@ public extension Int32 {
 // MARK: - Shell Protocol
 
 /// A protocol defining the interface for executing shell commands.
+//sourcery: AutoMockable
 public protocol Shell {
     /// Executes a bash command and returns the output.
     ///
