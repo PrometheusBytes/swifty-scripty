@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - FileUtility Protocol
+
 /// FileUtility: A protocol defining common file and folder operations.
 ///
 /// This protocol specifies methods for checking the existence of files and folders, creating folders, deleting files, copying files, reading from files, and writing to files.
@@ -72,6 +74,8 @@ public protocol FileUtility {
     @discardableResult
     func writeFile(content: String, to path: URL) -> Bool
 }
+
+// MARK: - FileUtility Implementation
 
 /// FileUtilityImpl: A concrete implementation of the FileUtility protocol.
 ///

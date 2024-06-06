@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - Git Protocol
+
 /// Git: A protocol defining common operations for interacting with a Git repository.
 ///
 /// This protocol specifies methods for checking repository changes, discarding changes, and accessing the root directory of the repository.
@@ -17,6 +19,8 @@ public protocol Git {
     /// Discards all changes in the Git repository.
     func discardChanges()
 }
+
+// MARK: - Git Implementation
 
 /// GitImpl: A concrete implementation of the Git protocol.
 ///
