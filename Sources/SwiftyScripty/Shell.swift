@@ -1,15 +1,28 @@
 import Foundation
 import RegexBuilder
 
+/// Represents the result of a shell command execution.
 public struct Command {
+    /// The standard output of the command.
     public let output: String
+
+    /// The error output of the command.
     public let errorOutput: String
+
+    /// The exit code of the command.
     public let exitCode: Int32
 
+    /// Indicates whether the command succeeded.
     public var succeeded: Bool {
         return exitCode == .successExitCode
     }
 
+    /// Initializes a new Command instance.
+    ///
+    /// - Parameters:
+    ///   - output: The standard output of the command.
+    ///   - errorOutput: The error output of the command.
+    ///   - exitCode: The exit code of the command.
     public init(output: String, errorOutput: String, exitCode: Int32) {
         self.output = output
         self.errorOutput = errorOutput
@@ -17,47 +30,127 @@ public struct Command {
     }
 }
 
+/// Extension to provide standard exit codes.
 public extension Int32 {
+    /// Standard exit code indicating error.
     static let errorExitCode: Self = 1
+
+    /// Standard exit code indicating success.
     static let successExitCode: Self = 0
 }
 
+// MARK: - Shell Protocol
+
+/// A protocol defining the interface for executing shell commands.
 //sourcery: AutoMockable
 public protocol Shell {
+    /// Executes a bash command and returns the output.
+    ///
+    /// - Parameter command: The bash command to execute.
+    /// - Returns: The standard output of the command.
     func bash(command: String) -> String?
+
+    /// Executes a bash command and returns the command result.
+    ///
+    /// - Parameter command: The bash command to execute.
+    /// - Returns: A `Command` struct with the result of the command execution.
     func bashWithExitCode(command: String) -> Command?
+
+    /// Executes a bash command and returns the exit code.
+    ///
+    /// - Parameter command: The bash command to execute.
+    /// - Returns: The exit code of the command.
     @discardableResult
     func runBash(command: String) -> Int32?
+
+    /// Executes a zsh command and returns the output.
+    ///
+    /// - Parameter command: The zsh command to execute.
+    /// - Returns: The standard output of the command.
     func zsh(command: String) -> String?
+
+    /// Executes a zsh command and returns the command result.
+    ///
+    /// - Parameter command: The zsh command to execute.
+    /// - Returns: A `Command` struct with the result of the command execution.
     func zshWithExitCode(command: String) -> Command?
+
+    /// Executes a zsh command and returns the exit code.
+    ///
+    /// - Parameter command: The zsh command to execute.
+    /// - Returns: The exit code of the command.
     @discardableResult
     func runZsh(command: String) -> Int32?
+
+    /// Reads a zsh variable.
+    ///
+    /// - Parameter key: The key of the zsh variable to read.
+    /// - Returns: The value of the zsh variable.
     func readZshVar(key: String) -> String?
+
+    /// Reads a bash variable.
+    ///
+    /// - Parameter key: The key of the bash variable to read.
+    /// - Returns: The value of the bash variable.
     func readBashVar(key: String) -> String?
+
+    /// Asks a question to the user and returns the response.
+    ///
+    /// - Parameter question: The question to ask.
+    /// - Returns: The user's response.
     func askQuestion(question: String) -> String?
+
+    /// Asks for permission with a question and returns the user's decision.
+    ///
+    /// - Parameter question: The question to ask for permission.
+    /// - Returns: `true` if the user grants permission, `false` otherwise.
     func askPermission(question: String) -> Bool
+
+    /// Prints text with a specific color.
+    ///
+    /// - Parameters:
+    ///   - color: The color to use for printing.
+    ///   - text: The text to print.
     func print(color: ANSIColors, text: String)
+
+    /// Exits the application with a specific exit code.
+    ///
+    /// - Parameter code: The exit code.
     func exit(with code: Int32)
 }
 
+// MARK: - Shell Implementation
+
+/// An implementation of the `Shell`.
 class ShellImpl {
     
     // MARK: Constants
     
-    static let goToRootCommand = "cd $(git rev-parse --show-toplevel)"
+    /// A token used to identify the start of an interactive shell script output.
     let scriptStartToken = "<--Swift Script Interactive Shell Start-->"
-    
+
     // MARK: Launch Paths
     
+    /// Enumerates the launch paths for different shell environments.
     enum LaunchPaths: String {
+        /// The launch path for the Zsh shell.
         case zsh = "/bin/zsh"
+
+        /// The launch path for the Bash shell.
         case bash = "/bin/bash"
     }
     
-    // MARK: functions
+    // MARK: Functions
     
+    /// Executes a shell command and returns the command result.
+    ///
+    /// - Parameters:
+    ///   - launchPath: The launch path for the shell.
+    ///   - command: The command to execute.
+    ///   - returnOutput: A boolean indicating whether to return the output.
+    /// - Returns: A `Command` struct with the result of the command execution.
     func runCommand(launchPath: LaunchPaths, command: String, returnOutput: Bool) -> Command {
-        // Create the filtered command and configure process and pipe
+        // Create the filtered command and configure process and pipe.
         let newCommand: String
         if returnOutput {
             newCommand = "echo \"\(scriptStartToken)\";"+command
@@ -69,13 +162,13 @@ class ShellImpl {
             command: newCommand
         )
 
-        // Create the output handlers for normal and error output
+        // Create the output handlers for normal and error output.
         let outputHandler = pipe.fileHandleForReading
         let errorOutputHandler = errorPipe.fileHandleForReading
         var output: String = ""
         var errorOutput: String = ""
         
-        // Add the handler closure for the output
+        // Add the handler closure for the output.
         outputHandler.readabilityHandler = { pipe in
             if let string = String(data: pipe.availableData, encoding: .utf8), !string.isEmpty {
                 if returnOutput {
@@ -86,7 +179,7 @@ class ShellImpl {
             }
         }
 
-        // Add the handler closure for the error output
+        // Add the handler closure for the error output.
         errorOutputHandler.readabilityHandler = { pipe in
             if let string = String(data: pipe.availableData, encoding: .utf8), !string.isEmpty {
                 if returnOutput {
@@ -97,11 +190,11 @@ class ShellImpl {
             }
         }
 
-        // Start the process
+        // Start the process.
         process.launch()
         process.waitUntilExit()
         
-        // Filter and return the output
+        // Filter and return the output.
         if returnOutput { output = filterOutput(output: output) }
         return Command(
             output: output,
@@ -110,6 +203,10 @@ class ShellImpl {
         )
     }
 
+    /// Filters the command output to remove the script start token.
+    ///
+    /// - Parameter output: The output to filter.
+    /// - Returns: The filtered output.
     func filterOutput(output: String) -> String {
         let lines = output.components(separatedBy: "\n")
         var startIndex: Int?
@@ -127,6 +224,12 @@ class ShellImpl {
         }
     }
     
+    /// Configures and returns a standard process and pipes for command execution.
+    ///
+    /// - Parameters:
+    ///   - launchPath: The launch path for the shell.
+    ///   - command: The command to execute.
+    /// - Returns: A tuple containing the process, output pipe, and error pipe.
     func configureStandardProcessAndPipe(
         launchPath: LaunchPaths,
         command: String
@@ -139,14 +242,20 @@ class ShellImpl {
         process.standardOutput = pipe
         process.standardError = errorPipe
         process.launchPath = launchPath.rawValue
-#if DEBUG
+        #if DEBUG
         process.arguments = ["-i", "-l", "-c", command]
-#else
+        #else
         process.arguments = ["-c", command]
-#endif
+        #endif
         return (process, pipe, errorPipe)
     }
     
+    /// Runs a shell command and returns the exit code.
+    ///
+    /// - Parameters:
+    ///   - launchPath: The launch path for the shell.
+    ///   - command: The command to execute.
+    /// - Returns: The exit code of the command execution.
     func runShellCommand(
         launchPath: LaunchPaths,
         command: String
@@ -158,6 +267,12 @@ class ShellImpl {
         ).exitCode
     }
 
+    /// Runs a shell command and returns the command result.
+    ///
+    /// - Parameters:
+    ///   - launchPath: The launch path for the shell.
+    ///   - command: The command to execute.
+    /// - Returns: A `Command` struct with the result of the command execution.
     func runReturningShellCommand(
         launchPath: LaunchPaths,
         command: String
@@ -169,6 +284,12 @@ class ShellImpl {
         )
     }
     
+    /// Reads a shell variable.
+    ///
+    /// - Parameters:
+    ///   - launchPath: The launch path for the shell.
+    ///   - key: The variable key.
+    /// - Returns: The value of the variable.
     private func readShellVar(launchPath: LaunchPaths, key: String) -> String? {
         guard
             let output = runReturningShellCommand(
@@ -182,10 +303,9 @@ class ShellImpl {
         
         return output
     }
-    
 }
 
-// MARK: Shell Protocol
+// MARK: - Shell Protocol Conformance
 
 extension ShellImpl: Shell {
     func bash(command: String) -> String? {
@@ -254,11 +374,11 @@ extension ShellImpl: Shell {
     }
     
     func print(color: ANSIColors, text: String) {
-#if DEBUG
+        #if DEBUG
         Swift.print("\(color.debugEmoji) \(text)")
-#else
+        #else
         Swift.print(color.rawValue + text + ANSIColors.clear.rawValue)
-#endif
+        #endif
     }
 
     func exit(with code: Int32) {
