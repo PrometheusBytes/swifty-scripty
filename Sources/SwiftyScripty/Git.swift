@@ -26,6 +26,7 @@ public protocol Git {
 ///
 /// This struct provides implementations for common Git operations using a shell command interface.
 struct GitImpl: Git {
+    /// The shell utility used to execute commands.
     @Injected(\.shell) var shell: Shell
 
     var srcRoot: String? {

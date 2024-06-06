@@ -75,6 +75,7 @@ public extension SourceryWrapper {
 
 /// An implementation of the `SourceryWrapper` protocol.
 public struct SourceryWrapperImpl: SourceryWrapper {
+    /// The shell utility used to execute commands.
     @Injected(\.shell) var shell: Shell
     
     /// The path to the Sourcery binary.

@@ -81,6 +81,7 @@ public protocol FileUtility {
 ///
 /// This struct provides implementations for common file and folder operations using the FileManager class.
 struct FileUtilityImpl: FileUtility {
+    /// The shell utility used to execute commands.
     @Injected(\.shell) var shell: Shell
 
     func folderExists(at path: URL) -> Bool {
