@@ -26,4 +26,17 @@ final class SwiftPackageTests: XCTestCase {
         XCTAssertTrue(shellDependency.runZshCommandCalled)
         XCTAssertEqual(shellDependency.runZshCommandReceivedCommand, "\(reachCommand);\(initializeCommand)")
     }
+
+    func test_runInitialize_thenCallsCorrectCommand() {
+        // GIVEN
+        let reachCommand = "cd \(Constants.path.getFullPath())"
+        let initializeCommand = "swift package init --type executable"
+
+        // WHEN
+        let command = sut.runInitialize(at: Constants.path)
+
+        // THEN
+        XCTAssertTrue(shellDependency.zshWithExitCodeCommandCalled)
+        XCTAssertEqual(shellDependency.zshWithExitCodeCommandReceivedCommand, "\(reachCommand);\(initializeCommand)")
+    }
 }

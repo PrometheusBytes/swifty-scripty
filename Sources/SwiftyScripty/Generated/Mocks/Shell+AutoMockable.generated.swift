@@ -206,6 +206,23 @@ public class ShellMock: Shell {
         printColorTextClosure?(color, text)
     }
 
+    //MARK: - clear
+
+    public var clearNumberOfLinesCallsCount = 0
+    public var clearNumberOfLinesCalled: Bool {
+        return clearNumberOfLinesCallsCount > 0
+    }
+    public var clearNumberOfLinesReceivedNumberOfLines: Int?
+    public var clearNumberOfLinesReceivedInvocations: [Int] = []
+    public var clearNumberOfLinesClosure: ((Int) -> Void)?
+
+    public func clear(numberOfLines: Int) {
+        clearNumberOfLinesCallsCount += 1
+        clearNumberOfLinesReceivedNumberOfLines = numberOfLines
+        clearNumberOfLinesReceivedInvocations.append(numberOfLines)
+        clearNumberOfLinesClosure?(numberOfLines)
+    }
+
     //MARK: - exit
 
     public var exitWithCallsCount = 0
