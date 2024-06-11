@@ -391,9 +391,9 @@ extension ShellImpl: Shell {
 
     func clear(numberOfLines: Int) {
         for _ in 0..<numberOfLines {
-            // Move cursor up one line
+            // Move cursor up one line.
             Swift.print("\u{1B}[1A", terminator: "")
-            // Clear the line
+            // Clear the line.
             Swift.print("\u{1B}[2K", terminator: "")
         }
     }
