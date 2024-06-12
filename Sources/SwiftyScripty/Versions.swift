@@ -1,27 +1,44 @@
 import Foundation
 
+/// An enumeration representing version components.
 public enum Versions: String, CaseIterable {
+    /// The major version component.
     case major
+    
+    /// The minor version component.
     case minor
+    
+    /// The patch version component.
     case patch
 }
 
+/// A structure representing a version number.
 public struct Version: Equatable, Comparable {
+    /// The major version number.
     let major: Int
+    
+    /// The minor version number.
     let minor: Int
+    
+    /// The patch version number.
     let patch: Int
 
+    /// A zero-initialized version.
     static let zero = Version(0)
 
+    /// Initializes a Version structure with the specified major, minor, and patch numbers.
+    ///
+    /// - Parameters:
+    ///   - major: The major version number.
+    ///   - minor: The minor version number. Default value is `0`.
+    ///   - patch: The patch version number. Default value is `0`.
     public init(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) {
         self.major = major
         self.minor = minor ?? 0
         self.patch = patch ?? 0
     }
 
-    /// A way to init a version using a dictionary
-    ///
-    /// This init allows to translate a dictionary of `Versions: Int` into a `Version`.
+    /// Initializes a Version structure using a dictionary of version components.
     ///
     /// > Example:
     ///
@@ -36,7 +53,7 @@ public struct Version: Equatable, Comparable {
     /// ```
     ///
     /// - Parameters:
-    ///   - dictionary: The dictionary used to create the Version.
+    ///   - dictionary: A dictionary containing version components.
     public init?(dictionary: [Versions: Int]) {
         guard let major = dictionary[.major] else {
             return nil
@@ -47,9 +64,7 @@ public struct Version: Equatable, Comparable {
         self.patch = dictionary[.patch] ?? 0
     }
 
-    /// A way to init a version using a string and a format.
-    ///
-    /// This init allows to translate any string into a version.
+    /// Initializes a Version structure using a text and a format string.
     /// The format passed should replace the version string with `<version>`.
     ///
     /// > Example:
@@ -62,8 +77,8 @@ public struct Version: Equatable, Comparable {
     /// ```
     ///
     /// - Parameters:
-    ///   - text: The text to be parsed.
-    ///   - format: The format used to parse the text.
+    ///   - text: The text containing the version information.
+    ///   - format: The format string specifying how to extract the version information from the text.
     public init?(text: String, format: String) {
         let versionString = "(?<\(Versions.major.rawValue)>\\d+).?(?<\(Versions.minor.rawValue)>\\d*).?(?<\(Versions.patch.rawValue)>\\d*)"
 
@@ -96,6 +111,12 @@ public struct Version: Equatable, Comparable {
         self.init(dictionary: captures)
     }
 
+    /// Compares two Version structures.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand side Version to compare.
+    ///   - rhs: The right-hand side Version to compare.
+    /// - Returns: `true` if lhs is less than rhs; otherwise, `false`.
     public static func < (lhs: Version, rhs: Version) -> Bool {
         guard lhs.major == rhs.major else {
             return lhs.major < rhs.major

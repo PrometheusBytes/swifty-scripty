@@ -1,69 +1,74 @@
 import Foundation
 
+/// InjectedValues: A simple struct for managing dependency injection values.
+///
+/// This struct allows for the retrieval of dependencies using subscript syntax. It provides support for live and test environments by checking if the code is running within an XCTest environment.
 public struct InjectedValues {
     private static var current = InjectedValues()
-    private static var resetFunctions = [UUID: ()->Void]()
-    private static let lock = NSRecursiveLock()
 
-    public static func resetAllTests() {
-        resetFunctions.forEach { _, value in
-            value()
-        }
-    }
-
+    /// Retrieves the value associated with the given injection key type.
+    ///
+    /// If the code is running in a test environment, it returns the test value; otherwise, it returns the live value.
+    ///
+    /// - Parameter key: The injection key type.
+    /// - Returns: The value associated with the given key.
     public static subscript<K>(key: K.Type) -> K.Value where K: InjectionKey {
         get {
-            return key.value
-        }
-        set {
-            guard lock.lock(before: Date().addingTimeInterval(1)) else {
-                return
+            if isRunningTests {
+                return key.testValue
+            } else {
+                return key.liveValue
             }
-
-            key.value = newValue
-            lock.unlock()
         }
     }
 
-    public static subscript<T>(_ keyPath: WritableKeyPath<InjectedValues, T>) -> T {
+    /// Retrieves the value associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path to the value in `InjectedValues`.
+    /// - Returns: The value at the specified key path.
+    public static subscript<T>(_ keyPath: KeyPath<InjectedValues, T>) -> T {
         get { current[keyPath: keyPath] }
-        set { current[keyPath: keyPath] = newValue }
     }
 
+    /// Determines if the code is running in a test environment.
+    ///
+    /// - Returns: `true` if the code is running in an XCTest environment, `false` otherwise.
     static var isRunningTests: Bool {
         get {
             return NSClassFromString("XCTest") != nil
         }
     }
-
-    public static func addResetFunction(_ function: @escaping () -> Void, for id: UUID) {
-        guard
-            isRunningTests,
-            lock.lock(before: Date().addingTimeInterval(1))
-        else {
-            return
-        }
-
-        resetFunctions[id] = function
-        lock.unlock()
-    }
 }
 
+/// InjectionKey: A protocol for defining keys used in dependency injection.
+///
+/// This protocol requires conforming types to provide a live value and a test value for the associated type.
 public protocol InjectionKey: Hashable {
     associatedtype Value
 
-    static var value: Self.Value { get set }
+    /// The live value for the key.
+    static var liveValue: Self.Value { get }
+    
+    /// The test value for the key.
+    static var testValue: Self.Value { get }
 }
 
+/// Injected: A property wrapper for injecting dependencies.
+///
+/// This property wrapper retrieves the value associated with the given key path from `InjectedValues`.
 @propertyWrapper
 public struct Injected<T> {
-    private let keyPath: WritableKeyPath<InjectedValues, T>
+    private let keyPath: KeyPath<InjectedValues, T>
+
+    /// The injected value.
     public var wrappedValue: T {
         get { InjectedValues[keyPath] }
-        set { InjectedValues[keyPath] = newValue }
     }
 
-    public init(_ keyPath: WritableKeyPath<InjectedValues, T>) {
+    /// Initializes the property wrapper with the given key path.
+    ///
+    /// - Parameter keyPath: The key path to the value in `InjectedValues`.
+    public init(_ keyPath: KeyPath<InjectedValues, T>) {
         self.keyPath = keyPath
     }
 }

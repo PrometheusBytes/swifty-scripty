@@ -1,0 +1,10 @@
+configurations:
+  - sources:
+      - ../..
+    templates:
+      - ../Templates/autoMockable.stencil
+    output:
+        ../../Generated/Mocks
+    args:
+      import:
+        - Foundation

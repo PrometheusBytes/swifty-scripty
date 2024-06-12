@@ -1,5 +1,6 @@
-SOURCERY_PATH := ./Resources/ExternalLibraries/Sourcery-2.0.2/bin/sourcery
-SWIFTGEN_PATH := ./Resources/ExternalLibraries/swiftgen-6.6.2/bin/swiftgen
+SOURCERY_PATH := ./Sources/SwiftyScripty/Resources/Binaries/sourcery
+SWIFTGEN_PATH := ./Sources/SwiftyScripty/Resources/Binaries/swiftgen
+RESOURCES_PATH := ./Sources/SwiftyScripty/Resources
 .PHONY: tests setup mocks clean list build_clean_script
 
 list:
@@ -10,18 +11,15 @@ list:
 	@echo "==========================="
 	@echo "di_keys_and_mocks"
 	@echo "tests"
+	@echo "build_scripts"
 
 di_keys_and_mocks:
 	@echo "Removing Generated Code..."
-	@./bin/CleanScript ./Sources/SwiftyScripty ./Sources/SwiftyScriptyTests
+	@rm -rf ./Sources/SwiftyScripty/Generated
 	@echo "Generating Injection keys..."
-	@$(SOURCERY_PATH) --config ./Resources/GenerationConfiguration/injectionKeys.yml
-	@echo "Generating scripts enum..."
-	#@$(SWIFTGEN_PATH) config run --config ./Resources/GenerationConfiguration/swiftgen.yml
+	@$(SOURCERY_PATH) --config $(RESOURCES_PATH)/GenerationConfiguration/injectionKeys.yml
 	@echo "Generating mocks..."
-	@$(SOURCERY_PATH)  --config ./Resources/GenerationConfiguration/mocks.yml
-	@echo "Generating Registrator..."
-	@$(SOURCERY_PATH)  --config ./Resources/GenerationConfiguration/inlineRegistrator.yml
+	@$(SOURCERY_PATH)  --config $(RESOURCES_PATH)/GenerationConfiguration/mocks.yml
 
 tests:
 	@make di_keys_and_mocks
@@ -32,6 +30,5 @@ build_scripts:
 	@make di_keys_and_mocks
 	@swift package clean
 	@swift build --configuration release
-	@cp -f .build/release/CleanScript ./bin
 	@cp -f .build/release/MakeSwiftScript ./bin
 	@cp -f .build/release/SetupScript ./bin
