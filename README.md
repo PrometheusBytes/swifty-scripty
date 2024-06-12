@@ -126,7 +126,7 @@ We welcome contributions! Please read our contributing guidelines to get started
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
