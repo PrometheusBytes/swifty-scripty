@@ -1,3 +1,5 @@
+<img src="https://github.com/PrometheusBytes/swifty-scripty/assets/48754828/6d8b363e-3c76-4620-b74b-75bb8fbc25a9" width=100/>
+
 # Swifty Scripty
 
 SwiftyScripty is a Swift package that enables you to create new scripts using a CLI, and it interacts with various tools such as shell, Git commands, Sourcery, and more. By simply importing and injecting dependencies with Swift code, you can streamline your script creation process.
