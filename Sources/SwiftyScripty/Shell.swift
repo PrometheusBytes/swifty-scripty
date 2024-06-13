@@ -28,6 +28,9 @@ public struct Command {
         self.errorOutput = errorOutput
         self.exitCode = exitCode
     }
+
+    /// A static variable representing an unknown error.
+    public static let unknownError = Command(output: "", errorOutput: "Unknown Error", exitCode: 1)
 }
 
 /// Extension to provide standard exit codes.
@@ -112,6 +115,11 @@ public protocol Shell {
     ///   - color: The color to use for printing.
     ///   - text: The text to print.
     func print(color: ANSIColors, text: String)
+
+    /// Removes the specified number of lines from the output.
+    ///
+    /// - Parameter numberOfLines: The number of lines to remove.
+    func clear(numberOfLines: Int)
 
     /// Exits the application with a specific exit code.
     ///
@@ -379,6 +387,15 @@ extension ShellImpl: Shell {
         #else
         Swift.print(color.rawValue + text + ANSIColors.clear.rawValue)
         #endif
+    }
+
+    func clear(numberOfLines: Int) {
+        for _ in 0..<numberOfLines {
+            // Move cursor up one line.
+            Swift.print("\u{1B}[1A", terminator: "")
+            // Clear the line.
+            Swift.print("\u{1B}[2K", terminator: "")
+        }
     }
 
     func exit(with code: Int32) {
