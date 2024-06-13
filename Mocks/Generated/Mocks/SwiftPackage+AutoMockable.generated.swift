@@ -3,9 +3,9 @@
 // swiftlint:disable all
 
 import Foundation
+import SwiftyScripty
 
 public class SwiftPackageMock: SwiftPackage {
-
 
     public init() {}
 
