@@ -9,10 +9,13 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "SwiftyScripty",
             targets: ["SwiftyScripty"]
+        ),
+        .library(
+            name: "SwiftyScriptyMocks",
+            targets: ["SwiftyScriptyMocks"]
         )
     ],
     dependencies: [],
@@ -26,15 +29,24 @@ let package = Package(
             resources: [.copy("Resources")],
             swiftSettings: [.define("DEBUG", .when(configuration: .debug))]
         ),
-        
+
+        // MARK:  Swifty Scripty Mocks
+
+        .target(
+            name: "SwiftyScriptyMocks",
+            dependencies: ["SwiftyScripty"],
+            path: "Mocks"
+        ),
+
         // MARK:  Swifty Scripty Test Target
         
         .testTarget(
             name: "SwiftyScriptyTests",
             dependencies: [
-                "SwiftyScripty"
+                "SwiftyScripty",
+                "SwiftyScriptyMocks"
             ],
-            path: "Tests/SwiftyScriptyTests"
+            path: "Tests"
         )
     ]
 )
