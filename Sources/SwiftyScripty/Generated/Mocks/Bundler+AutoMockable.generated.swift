@@ -41,4 +41,50 @@ public class BundlerMock: Bundler {
         return isInstalledClosure.map({ $0() }) ?? isInstalledReturnValue
     }
 
+    //MARK: - installGems
+
+    public var installGemsCallsCount = 0
+    public var installGemsCalled: Bool {
+        return installGemsCallsCount > 0
+    }
+    public var installGemsReturnValue: Bool!
+    public var installGemsClosure: (() -> Bool)?
+
+    public func installGems() -> Bool {
+        installGemsCallsCount += 1
+        return installGemsClosure.map({ $0() }) ?? installGemsReturnValue
+    }
+
+    //MARK: - updateGems
+
+    public var updateGemsCallsCount = 0
+    public var updateGemsCalled: Bool {
+        return updateGemsCallsCount > 0
+    }
+    public var updateGemsReturnValue: Bool!
+    public var updateGemsClosure: (() -> Bool)?
+
+    public func updateGems() -> Bool {
+        updateGemsCallsCount += 1
+        return updateGemsClosure.map({ $0() }) ?? updateGemsReturnValue
+    }
+
+    //MARK: - executeBundlerCommand
+
+    public var executeBundlerCommandArgumentsCallsCount = 0
+    public var executeBundlerCommandArgumentsCalled: Bool {
+        return executeBundlerCommandArgumentsCallsCount > 0
+    }
+    public var executeBundlerCommandArgumentsReceivedArguments: (command: String, arguments: [String])?
+    public var executeBundlerCommandArgumentsReceivedInvocations: [(command: String, arguments: [String])] = []
+    public var executeBundlerCommandArgumentsReturnValue: String?
+    public var executeBundlerCommandArgumentsClosure: ((String, [String]) -> String?)?
+
+    public func executeBundlerCommand(_ command: String, arguments: [String]) -> String? {
+        executeBundlerCommandArgumentsCallsCount += 1
+        executeBundlerCommandArgumentsReceivedArguments = (command: command, arguments: arguments)
+        executeBundlerCommandArgumentsReceivedInvocations.append((command: command, arguments: arguments))
+        return executeBundlerCommandArgumentsClosure.map({ $0(command, arguments) }) ?? executeBundlerCommandArgumentsReturnValue
+    }
+
 }
