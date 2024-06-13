@@ -1,4 +1,5 @@
 @testable import SwiftyScripty
+import SwiftyScriptyMocks
 import XCTest
 
 final class ANSIColorsTests: XCTestCase {

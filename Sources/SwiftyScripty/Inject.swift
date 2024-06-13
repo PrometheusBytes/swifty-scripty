@@ -4,6 +4,7 @@ import Foundation
 ///
 /// This struct allows for the retrieval of dependencies using subscript syntax. It provides support for live and test environments by checking if the code is running within an XCTest environment.
 public struct InjectedValues {
+    private static let lock = NSRecursiveLock()
     private static var current = InjectedValues()
 
     /// Retrieves the value associated with the given injection key type.
@@ -15,7 +16,14 @@ public struct InjectedValues {
     public static subscript<K>(key: K.Type) -> K.Value where K: InjectionKey {
         get {
             if isRunningTests {
-                return key.testValue
+                guard
+                    let testKey = key as? any InjectionTest.Type,
+                    let value = testKey.testValue as? K.Value
+                else {
+                    fatalError("Unable to find test value")
+                }
+
+                return value
             } else {
                 return key.liveValue
             }
@@ -27,7 +35,14 @@ public struct InjectedValues {
     /// - Parameter keyPath: The key path to the value in `InjectedValues`.
     /// - Returns: The value at the specified key path.
     public static subscript<T>(_ keyPath: KeyPath<InjectedValues, T>) -> T {
-        get { current[keyPath: keyPath] }
+        get {
+            guard lock.lock(before: .now + 2) else {
+                fatalError("Unable to get instance of \(keyPath)")
+            }
+            let instance = current[keyPath: keyPath]
+            lock.unlock()
+            return instance
+        }
     }
 
     /// Determines if the code is running in a test environment.
@@ -47,10 +62,12 @@ public protocol InjectionKey: Hashable {
     associatedtype Value
 
     /// The live value for the key.
-    static var liveValue: Self.Value { get }
-    
+    static var liveValue: Value { get }
+}
+
+public protocol InjectionTest: InjectionKey {
     /// The test value for the key.
-    static var testValue: Self.Value { get }
+    static var testValue: Value { get }
 }
 
 /// Injected: A property wrapper for injecting dependencies.

@@ -20,13 +20,19 @@ To install `SwiftyScripty`, follow these steps:
 
 2. Place the binary in a directory included in your system's PATH.
 
-3. Make the binary executable:
+   We suggest copying the binary inside `/usr/local/bin`, to have it available in the whole system.
 
     ```
-    chmod +x /path/to/swiftyscripty
+    sudo cp -f <path-to-swiftyscripty> /usr/local/bin/swiftyscripty
     ```
 
-4. Call the binary
+4. Make the binary executable:
+
+    ```
+    chmod +x <path-to-swiftyscripty>
+    ```
+
+5. Call the binary
 
    ```sh
    swiftyscripty
