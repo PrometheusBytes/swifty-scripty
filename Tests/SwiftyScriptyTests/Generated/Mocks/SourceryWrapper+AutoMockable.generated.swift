@@ -3,9 +3,9 @@
 // swiftlint:disable all
 
 import Foundation
+import SwiftyScripty
 
 public class SourceryWrapperMock: SourceryWrapper {
-
 
     public init() {}
 
