@@ -1,11 +1,12 @@
 import Foundation
+import SwiftyScriptyMacros
 
 // MARK: - SwiftPackage Protocol
 
 /// A protocol for initializing Swift packages.
 ///
 /// This protocol defines a method for initializing a Swift package at a specified path.
-//sourcery: AutoMockable
+@InjectableMacro(implementationName: "SwiftPackageImpl")
 public protocol SwiftPackage {
     /// Initializes a Swift package at the specified path.
     ///

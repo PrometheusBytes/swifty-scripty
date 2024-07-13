@@ -1,11 +1,12 @@
 import Foundation
+import SwiftyScriptyMacros
 
 // MARK: - Git Protocol
 
 /// Git: A protocol defining common operations for interacting with a Git repository.
 ///
 /// This protocol specifies methods for checking repository changes, discarding changes, and accessing the root directory of the repository.
-//sourcery: AutoMockable
+@InjectableMacro(implementationName: "GitImpl")
 public protocol Git {
     /// The root directory of the Git repository.
     var root: String? { get }

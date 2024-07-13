@@ -1,11 +1,12 @@
 import Foundation
+import SwiftyScriptyMacros
 
 // MARK: - FileUtility Protocol
 
 /// FileUtility: A protocol defining common file and folder operations.
 ///
 /// This protocol specifies methods for checking the existence of files and folders, creating folders, deleting files, copying files, reading from files, and writing to files.
-//sourcery: AutoMockable
+@InjectableMacro(implementationName: "FileUtilityImpl")
 public protocol FileUtility {
     /// Checks if a folder exists at the specified path.
     ///

@@ -1,11 +1,12 @@
 import Foundation
+import SwiftyScriptyMacros
 
 // MARK: - SourceryWrapper Protocol
 
 /// A protocol for generating code using Sourcery.
 ///
 /// This protocol defines methods for generating code from various configurations and templates.
-//sourcery: AutoMockable
+@InjectableMacro(implementationName: "SourceryWrapperImpl")
 public protocol SourceryWrapper {
     /// Generates code based on a configuration file.
     ///

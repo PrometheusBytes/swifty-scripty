@@ -1,5 +1,6 @@
 import Foundation
 import RegexBuilder
+import SwiftyScriptyMacros
 
 /// Represents the result of a shell command execution.
 public struct Command {
@@ -45,7 +46,7 @@ public extension Int32 {
 // MARK: - Shell Protocol
 
 /// A protocol defining the interface for executing shell commands.
-//sourcery: AutoMockable
+@InjectableMacro(implementationName: "ShellImpl")
 public protocol Shell {
     /// Executes a bash command and returns the output.
     ///
