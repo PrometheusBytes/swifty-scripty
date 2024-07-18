@@ -1,3 +1,5 @@
+<img src="https://github.com/PrometheusBytes/swifty-scripty/assets/48754828/d8165cd2-7cd2-47c3-81dc-afcccf975e99" width=200/>
+
 # Swifty Scripty
 
 SwiftyScripty is a Swift package that enables you to create new scripts using a CLI, and it interacts with various tools such as shell, Git commands, Sourcery, and more. By simply importing and injecting dependencies with Swift code, you can streamline your script creation process.
@@ -16,7 +18,7 @@ SwiftyScripty is a Swift package that enables you to create new scripts using a 
 
 To install `SwiftyScripty`, follow these steps:
 
-1. Download the binary file provided [here](https://github.com/PrometheusBytes/swifty-scripty/releases/download/0.1.0/swiftyscripty).
+1. Download the binary file provided [here](https://github.com/PrometheusBytes/swifty-scripty/releases/download/0.2.0/swiftyscripty).
 
 2. Place the binary in a directory included in your system's PATH.
 
