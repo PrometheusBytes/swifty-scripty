@@ -200,8 +200,10 @@ class ShellImpl {
 
         // Start the process.
         process.launch()
+        moveToForeground(process)
         process.waitUntilExit()
-        
+        restoreDefaultForegroundProcess()
+
         // Filter and return the output.
         if returnOutput { output = filterOutput(output: output) }
         return Command(
@@ -245,8 +247,7 @@ class ShellImpl {
         let process = Process()
         let pipe = Pipe()
         let errorPipe = Pipe()
-        
-        process.standardInput = nil
+
         process.standardOutput = pipe
         process.standardError = errorPipe
         process.launchPath = launchPath.rawValue
@@ -400,5 +401,29 @@ extension ShellImpl: Shell {
 
     func exit(with code: Int32) {
         Foundation.exit(code)
+    }
+}
+
+// MARK: - Helper Functions
+
+private extension ShellImpl {
+    /// The purpose of this function is to move the process to the foreground.
+    /// We use the `tcsetpgrp` command to move it to foreground
+    /// more info: https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/tcsetpgrp.3.html
+    /// this is needed to allow the user to enter input if the command requires it
+    /// We use signal to ignore the `SIGTTOU` signal sent when changing the foreground process (otherwise it will crash)
+    ///
+    /// - Parameter process: the process to move to foreground
+    private func moveToForeground(_ process: Process) {
+        tcsetpgrp(STDIN_FILENO, process.processIdentifier)
+        signal(SIGTTOU, SIG_IGN)
+    }
+
+    /// The purpose of this function is to restore the foreground to the current process.
+    /// and then we use `tcsetpgrp` to pass the current pid to the foreground
+    ///
+    /// - Parameter process: the process to move to foreground
+    private func restoreDefaultForegroundProcess() {
+        tcsetpgrp(STDIN_FILENO, getpid())
     }
 }
