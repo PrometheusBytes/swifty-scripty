@@ -12,11 +12,11 @@ public protocol SourceryWrapper {
     /// - Parameters:
     ///   - configPath: The URL of the Sourcery configuration file.
     ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: `true` if code generation succeeds, `false` otherwise.
+    /// - Returns: The Command output generated from sourcery.
     func generateCode(
         configPath: URL,
         args: [SourceryWrapperArguments]
-    ) -> Bool
+    ) async -> Command
 
     /// Generates code based on template and source files.
     ///
@@ -25,39 +25,15 @@ public protocol SourceryWrapper {
     ///   - sourcePaths: The URLs of the source files to process.
     ///   - outputPath: The URL of the output directory.
     ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: `true` if code generation succeeds, `false` otherwise.
+    ///   - trimSourceryHeader: `Bool`, indicates whether to remove the sourcery header or not.
+    /// - Returns: The Command output generated from sourcery.
     func generateCode(
         templatePaths: [URL],
         sourcePaths: [URL],
         outputPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Bool
-
-    /// Generates code based on a configuration file.
-    ///
-    /// - Parameters:
-    ///   - configPath: The URL of the Sourcery configuration file.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    func runGenerateCode(
-        configPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Command?
-
-    /// Generates code based on template and source files.
-    ///
-    /// - Parameters:
-    ///   - templatePaths: The URLs of the Sourcery templates.
-    ///   - sourcePaths: The URLs of the source files to process.
-    ///   - outputPath: The URL of the output directory.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    func runGenerateCode(
-        templatePaths: [URL],
-        sourcePaths: [URL],
-        outputPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Command?
+        args: [SourceryWrapperArguments],
+        trimSourceryHeader: Bool
+    ) async -> Command
 }
 
 public extension SourceryWrapper {
@@ -65,13 +41,13 @@ public extension SourceryWrapper {
     ///
     /// - Parameters:
     ///   - configPath: The URL of the Sourcery configuration file.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: `true` if code generation succeeds, `false` otherwise.
+    ///   - args: Additional arguments to customize the code generation process, defaults to empty.
+    /// - Returns: The Command output generated from sourcery.
     func generateCode(
         configPath: URL,
         args: [SourceryWrapperArguments] = []
-    ) -> Bool {
-        generateCode(configPath: configPath, args: args)
+    ) async -> Command {
+        await generateCode(configPath: configPath, args: args)
     }
 
     /// Generates code based on template and source files with default arguments.
@@ -81,53 +57,21 @@ public extension SourceryWrapper {
     ///   - sourcePath: The URL of the source file to process.
     ///   - outputPath: The URL of the output directory.
     ///   - args: Additional arguments to customize the code generation process.
+    ///   - trimSourceryHeader: `Bool`, indicates whether to remove the sourcery header or not. Defaults to false.
     /// - Returns: `true` if code generation succeeds, `false` otherwise.
     func generateCode(
         templatePath: URL,
         sourcePath: URL,
         outputPath: URL,
-        args: [SourceryWrapperArguments] = []
-    ) -> Bool {
-        generateCode(
+        args: [SourceryWrapperArguments] = [],
+        trimSourceryHeader: Bool = false
+    ) async -> Command {
+        await generateCode(
             templatePaths: [templatePath],
             sourcePaths: [sourcePath],
             outputPath: outputPath,
-            args: args
-        )
-    }
-
-    /// Generates code based on a configuration file.
-    ///
-    /// - Parameters:
-    ///   - configPath: The URL of the Sourcery configuration file.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    func runGenerateCode(
-        configPath: URL,
-        args: [SourceryWrapperArguments] = []
-    ) -> Command? {
-        runGenerateCode(configPath: configPath, args: args)
-    }
-
-    /// Generates code based on template and source files.
-    ///
-    /// - Parameters:
-    ///   - templatePaths: The URLs of the Sourcery templates.
-    ///   - sourcePaths: The URLs of the source files to process.
-    ///   - outputPath: The URL of the output directory.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    func runGenerateCode(
-        templatePath: URL,
-        sourcePath: URL,
-        outputPath: URL,
-        args: [SourceryWrapperArguments] = []
-    ) -> Command? {
-        runGenerateCode(
-            templatePaths: [templatePath],
-            sourcePaths: [sourcePath],
-            outputPath: outputPath,
-            args: args
+            args: args,
+            trimSourceryHeader: trimSourceryHeader
         )
     }
 }
@@ -151,21 +95,16 @@ public struct SourceryWrapperImpl: SourceryWrapper {
     /// - Parameters:
     ///   - configPath: The URL of the Sourcery configuration file.
     ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: `true` if code generation succeeds, `false` otherwise.
-    public func generateCode(configPath: URL, args: [SourceryWrapperArguments]) -> Bool {
-        guard let binaryPath else { return false }
-        var command = "\(binaryPath) --config \(configPath.getFullPath())"
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
+    ///   - trimSourceryHeader: `Bool`, indicates whether to remove the sourcery header or not.
+    /// - Returns: The Command output generated from sourcery.
+    public func generateCode(
+        configPath: URL,
+        args: [SourceryWrapperArguments]
+    ) async -> Command {
+        guard let binaryPath else { return .unknownError }
 
-        shell.runZsh(command: command)
-        return true
+        let command = "\(binaryPath) --config \(configPath.getFullPath())".append(arguments: args)
+        return await shell.run(command: command)
     }
 
     /// Generates code based on template and source files.
@@ -180,9 +119,10 @@ public struct SourceryWrapperImpl: SourceryWrapper {
         templatePaths: [URL],
         sourcePaths: [URL],
         outputPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Bool {
-        guard let binaryPath else { return false }
+        args: [SourceryWrapperArguments],
+        trimSourceryHeader: Bool
+    ) async -> Command {
+        guard let binaryPath else { return .unknownError }
         let templates = templatePaths.map { $0.getFullPath() }.joined(separator: " --templates ")
         let sources = sourcePaths.map { $0.getFullPath() }.joined(separator: " --sources ")
 
@@ -190,92 +130,34 @@ public struct SourceryWrapperImpl: SourceryWrapper {
         command.append(" --templates \(templates)")
         command.append(" --sources \(sources)")
         command.append(" --output \(outputPath.getFullPath())")
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
+        command = command.append(arguments: args)
 
-        guard shell.runZsh(command: command) == .successExitCode else {
-            return false
-        }
-        trimSourceryHeader(at: outputPath)
+        let commandOutput = await shell.run(command: command)
 
-        return true
-    }
-
-    /// Generates code based on a configuration file.
-    ///
-    /// - Parameters:
-    ///   - configPath: The URL of the Sourcery configuration file.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    public func runGenerateCode(
-        configPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Command? {
-        guard let binaryPath else { return Command.unknownError }
-        var command = "\(binaryPath) --config \(configPath.getFullPath())"
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
-
-        return shell.zshWithExitCode(command: command)
-    }
-
-    /// Generates code based on template and source files.
-    ///
-    /// - Parameters:
-    ///   - templatePaths: The URLs of the Sourcery templates.
-    ///   - sourcePaths: The URLs of the source files to process.
-    ///   - outputPath: The URL of the output directory.
-    ///   - args: Additional arguments to customize the code generation process.
-    /// - Returns: The Command output generated from sourcery, or `nil` in case of an error.
-    public func runGenerateCode(
-        templatePaths: [URL],
-        sourcePaths: [URL],
-        outputPath: URL,
-        args: [SourceryWrapperArguments]
-    ) -> Command? {
-        guard let binaryPath else { return nil }
-        let templates = templatePaths.map { $0.getFullPath() }.joined(separator: " --templates ")
-        let sources = sourcePaths.map { $0.getFullPath() }.joined(separator: " --sources ")
-
-        var command = binaryPath
-        command.append(" --templates \(templates)")
-        command.append(" --sources \(sources)")
-        command.append(" --output \(outputPath.getFullPath())")
-        if !args.isEmpty {
-            command.append(" --args ")
-            var arguments = ""
-            args.forEach { argument in
-                arguments.append("\(argument.key)=\(argument.value),")
-            }
-            command.append(arguments)
-        }
-
-        let commandOutput = shell.zshWithExitCode(command: command)
-        if commandOutput?.exitCode == .successExitCode {
-            trimSourceryHeader(at: outputPath)
+        if commandOutput.succeeded, trimSourceryHeader {
+            trimHeader(at: outputPath)
         }
 
         return commandOutput
     }
+}
 
-    /// Trims the Sourcery header from a generated file.
-    ///
-    /// Sourcery adds a header to generated files by default. This method removes the header from the generated file at the specified path.
-    ///
-    /// - Parameter path: The URL of the file to trim the header from.
-    private func trimSourceryHeader(at path: URL) {
+
+// MARK: - Helper Functions
+
+private extension String {
+    func append(arguments: [SourceryWrapperArguments]) -> String {
+        guard !arguments.isEmpty else { return self }
+
+        var toRet = self
+        toRet.append(" --args ")
+        toRet.append(arguments.map({ "\($0.key)=\($0.value)" }).joined(separator: ","))
+        return toRet
+    }
+}
+
+private extension SourceryWrapperImpl {
+    func trimHeader(at path: URL) {
         guard let fileContent = try? String(contentsOfFile: path.getFullPath()) else {
             return
         }
