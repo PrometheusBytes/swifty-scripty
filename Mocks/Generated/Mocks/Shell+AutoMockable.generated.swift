@@ -9,112 +9,22 @@ public class ShellMock: Shell {
 
     public init() {}
 
-    //MARK: - bash
+    //MARK: - run
 
-    public var bashCommandCallsCount = 0
-    public var bashCommandCalled: Bool {
-        return bashCommandCallsCount > 0
+    public var runCommandShellTypeCallsCount = 0
+    public var runCommandShellTypeCalled: Bool {
+        return runCommandShellTypeCallsCount > 0
     }
-    public var bashCommandReceivedCommand: String?
-    public var bashCommandReceivedInvocations: [String] = []
-    public var bashCommandReturnValue: String?
-    public var bashCommandClosure: ((String) -> String?)?
+    public var runCommandShellTypeReceivedArguments: (command: String, shellType: ShellType)?
+    public var runCommandShellTypeReceivedInvocations: [(command: String, shellType: ShellType)] = []
+    public var runCommandShellTypeReturnValue: Command!
+    public var runCommandShellTypeClosure: ((String, ShellType) -> Command)?
 
-    public func bash(command: String) -> String? {
-        bashCommandCallsCount += 1
-        bashCommandReceivedCommand = command
-        bashCommandReceivedInvocations.append(command)
-        return bashCommandClosure.map({ $0(command) }) ?? bashCommandReturnValue
-    }
-
-    //MARK: - bashWithExitCode
-
-    public var bashWithExitCodeCommandCallsCount = 0
-    public var bashWithExitCodeCommandCalled: Bool {
-        return bashWithExitCodeCommandCallsCount > 0
-    }
-    public var bashWithExitCodeCommandReceivedCommand: String?
-    public var bashWithExitCodeCommandReceivedInvocations: [String] = []
-    public var bashWithExitCodeCommandReturnValue: Command?
-    public var bashWithExitCodeCommandClosure: ((String) -> Command?)?
-
-    public func bashWithExitCode(command: String) -> Command? {
-        bashWithExitCodeCommandCallsCount += 1
-        bashWithExitCodeCommandReceivedCommand = command
-        bashWithExitCodeCommandReceivedInvocations.append(command)
-        return bashWithExitCodeCommandClosure.map({ $0(command) }) ?? bashWithExitCodeCommandReturnValue
-    }
-
-    //MARK: - runBash
-
-    public var runBashCommandCallsCount = 0
-    public var runBashCommandCalled: Bool {
-        return runBashCommandCallsCount > 0
-    }
-    public var runBashCommandReceivedCommand: String?
-    public var runBashCommandReceivedInvocations: [String] = []
-    public var runBashCommandReturnValue: Int32?
-    public var runBashCommandClosure: ((String) -> Int32?)?
-
-    public func runBash(command: String) -> Int32? {
-        runBashCommandCallsCount += 1
-        runBashCommandReceivedCommand = command
-        runBashCommandReceivedInvocations.append(command)
-        return runBashCommandClosure.map({ $0(command) }) ?? runBashCommandReturnValue
-    }
-
-    //MARK: - zsh
-
-    public var zshCommandCallsCount = 0
-    public var zshCommandCalled: Bool {
-        return zshCommandCallsCount > 0
-    }
-    public var zshCommandReceivedCommand: String?
-    public var zshCommandReceivedInvocations: [String] = []
-    public var zshCommandReturnValue: String?
-    public var zshCommandClosure: ((String) -> String?)?
-
-    public func zsh(command: String) -> String? {
-        zshCommandCallsCount += 1
-        zshCommandReceivedCommand = command
-        zshCommandReceivedInvocations.append(command)
-        return zshCommandClosure.map({ $0(command) }) ?? zshCommandReturnValue
-    }
-
-    //MARK: - zshWithExitCode
-
-    public var zshWithExitCodeCommandCallsCount = 0
-    public var zshWithExitCodeCommandCalled: Bool {
-        return zshWithExitCodeCommandCallsCount > 0
-    }
-    public var zshWithExitCodeCommandReceivedCommand: String?
-    public var zshWithExitCodeCommandReceivedInvocations: [String] = []
-    public var zshWithExitCodeCommandReturnValue: Command?
-    public var zshWithExitCodeCommandClosure: ((String) -> Command?)?
-
-    public func zshWithExitCode(command: String) -> Command? {
-        zshWithExitCodeCommandCallsCount += 1
-        zshWithExitCodeCommandReceivedCommand = command
-        zshWithExitCodeCommandReceivedInvocations.append(command)
-        return zshWithExitCodeCommandClosure.map({ $0(command) }) ?? zshWithExitCodeCommandReturnValue
-    }
-
-    //MARK: - runZsh
-
-    public var runZshCommandCallsCount = 0
-    public var runZshCommandCalled: Bool {
-        return runZshCommandCallsCount > 0
-    }
-    public var runZshCommandReceivedCommand: String?
-    public var runZshCommandReceivedInvocations: [String] = []
-    public var runZshCommandReturnValue: Int32?
-    public var runZshCommandClosure: ((String) -> Int32?)?
-
-    public func runZsh(command: String) -> Int32? {
-        runZshCommandCallsCount += 1
-        runZshCommandReceivedCommand = command
-        runZshCommandReceivedInvocations.append(command)
-        return runZshCommandClosure.map({ $0(command) }) ?? runZshCommandReturnValue
+    public func run(command: String, shellType: ShellType) -> Command {
+        runCommandShellTypeCallsCount += 1
+        runCommandShellTypeReceivedArguments = (command: command, shellType: shellType)
+        runCommandShellTypeReceivedInvocations.append((command: command, shellType: shellType))
+        return runCommandShellTypeClosure.map({ $0(command, shellType) }) ?? runCommandShellTypeReturnValue
     }
 
     //MARK: - readZshVar
@@ -133,24 +43,6 @@ public class ShellMock: Shell {
         readZshVarKeyReceivedKey = key
         readZshVarKeyReceivedInvocations.append(key)
         return readZshVarKeyClosure.map({ $0(key) }) ?? readZshVarKeyReturnValue
-    }
-
-    //MARK: - readBashVar
-
-    public var readBashVarKeyCallsCount = 0
-    public var readBashVarKeyCalled: Bool {
-        return readBashVarKeyCallsCount > 0
-    }
-    public var readBashVarKeyReceivedKey: String?
-    public var readBashVarKeyReceivedInvocations: [String] = []
-    public var readBashVarKeyReturnValue: String?
-    public var readBashVarKeyClosure: ((String) -> String?)?
-
-    public func readBashVar(key: String) -> String? {
-        readBashVarKeyCallsCount += 1
-        readBashVarKeyReceivedKey = key
-        readBashVarKeyReceivedInvocations.append(key)
-        return readBashVarKeyClosure.map({ $0(key) }) ?? readBashVarKeyReturnValue
     }
 
     //MARK: - askQuestion

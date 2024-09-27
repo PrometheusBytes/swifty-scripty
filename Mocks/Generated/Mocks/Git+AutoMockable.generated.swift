@@ -8,7 +8,20 @@ import SwiftyScripty
 public class GitMock: Git {
 
     public init() {}
-    public var root: String?
+
+    //MARK: - getRoot
+
+    public var getRootCallsCount = 0
+    public var getRootCalled: Bool {
+        return getRootCallsCount > 0
+    }
+    public var getRootReturnValue: String?
+    public var getRootClosure: (() -> String?)?
+
+    public func getRoot() -> String? {
+        getRootCallsCount += 1
+        return getRootClosure.map({ $0() }) ?? getRootReturnValue
+    }
 
     //MARK: - hasRepoChanges
 

@@ -17,31 +17,14 @@ public class SwiftPackageMock: SwiftPackage {
     }
     public var initializeAtReceivedPath: URL?
     public var initializeAtReceivedInvocations: [URL] = []
-    public var initializeAtClosure: ((URL) -> Void)?
+    public var initializeAtReturnValue: Command?
+    public var initializeAtClosure: ((URL) -> Command?)?
 
-    public func initialize(at path: URL) {
+    public func initialize(at path: URL) -> Command? {
         initializeAtCallsCount += 1
         initializeAtReceivedPath = path
         initializeAtReceivedInvocations.append(path)
-        initializeAtClosure?(path)
-    }
-
-    //MARK: - runInitialize
-
-    public var runInitializeAtCallsCount = 0
-    public var runInitializeAtCalled: Bool {
-        return runInitializeAtCallsCount > 0
-    }
-    public var runInitializeAtReceivedPath: URL?
-    public var runInitializeAtReceivedInvocations: [URL] = []
-    public var runInitializeAtReturnValue: Command?
-    public var runInitializeAtClosure: ((URL) -> Command?)?
-
-    public func runInitialize(at path: URL) -> Command? {
-        runInitializeAtCallsCount += 1
-        runInitializeAtReceivedPath = path
-        runInitializeAtReceivedInvocations.append(path)
-        return runInitializeAtClosure.map({ $0(path) }) ?? runInitializeAtReturnValue
+        return initializeAtClosure.map({ $0(path) }) ?? initializeAtReturnValue
     }
 
 }
