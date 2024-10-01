@@ -1,0 +1,94 @@
+import Foundation
+import SwiftyScripty
+
+//sourcery: AutoMockable
+public protocol InteractiveMenu {
+    func getAnswer(
+        message: String,
+        given options: [MenuOption]
+    ) async -> MenuOption?
+}
+
+public protocol MenuOption {
+    var description: String { get }
+
+    var clearAfter: Bool { get }
+}
+
+struct InteractiveMenuImpl {
+    // MARK: - Properties
+
+    @Injected(\.shell) var shell
+}
+
+extension InteractiveMenuImpl: InteractiveMenu  {
+    func getAnswer(
+        message: String,
+        given options: [MenuOption]
+    ) async -> MenuOption? {
+        guard var selection = Selection(options: options) else { return nil }
+
+        shell.print(color: .green, text: message)
+        printMenu(options: options, selected: selection.selectedIndex, clear: false)
+        for try await status in InputReader.inputStream {
+            switch status {
+            case .arrowUp: selection.update(with: .up)
+            case .arrowDown: selection.update(with: .down)
+            case .arrowLeft, .arrowRight: break
+            }
+            shell.clear(numberOfLines: options.count)
+            printMenu(options: options, selected: selection.selectedIndex)
+        }
+
+        if selection.selected.clearAfter {
+            let titleLines = message.components(separatedBy: .newlines).count
+            shell.clear(numberOfLines: titleLines + options.count)
+        }
+
+        return selection.selected
+    }
+
+    func printMenu(options: [MenuOption], selected: Int, clear: Bool = true) {
+        for (index, option) in options.enumerated() {
+            if index == selected {
+                shell.print(color: .clear, text: "👉 \(option.description)")
+            } else {
+                shell.print(color: .clear, text: "   \(option.description)")
+            }
+        }
+    }
+
+    struct Selection {
+        enum Action {
+            case up
+            case down
+        }
+
+        let options: [MenuOption]
+        var selectedIndex: Int = 0
+        let lastIndex: Int
+        var selected: MenuOption { options[selectedIndex] }
+
+        init?(options: [MenuOption]) {
+            guard !options.isEmpty else { return nil }
+
+            self.options = options
+            lastIndex = options.count - 1
+        }
+
+        mutating func update(with action: Action) {
+            switch action {
+            case .up:
+                selectedIndex = (selectedIndex - 1).clamped(to: 0...lastIndex)
+            case .down:
+                selectedIndex = (selectedIndex + 1).clamped(to: 0...lastIndex)
+            }
+        }
+    }
+}
+
+extension Comparable {
+    func clamped(to limits: ClosedRange<Self>) -> Self {
+        return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
