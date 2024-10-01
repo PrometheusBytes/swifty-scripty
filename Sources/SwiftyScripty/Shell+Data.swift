@@ -21,9 +21,7 @@ public struct Command: Equatable {
     public let exitCode: Int32
 
     /// Indicates whether the command succeeded.
-    public var succeeded: Bool {
-        return exitCode == .successExitCode
-    }
+    public var succeeded: Bool { exitCode == .successExitCode }
 
     /// Initializes a new Command instance.
     ///

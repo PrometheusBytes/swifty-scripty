@@ -1,6 +1,6 @@
 import Foundation
 
-/// A `struct` representing a system process
+/// A `struct` representing a system process.
 public struct SwiftyProcess {
 
     // MARK: - Private Properties

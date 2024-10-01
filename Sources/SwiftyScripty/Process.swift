@@ -32,7 +32,9 @@ public extension ProcessRunner {
 
 // MARK: - ProcessRunner Implementation
 
+/// An implementation of the `ProcessRunner`.
 struct ProcessRunnerImpl: ProcessRunner {
+
     // MARK: - Properties
 
     /// A token used to identify the start of an interactive shell script output.
