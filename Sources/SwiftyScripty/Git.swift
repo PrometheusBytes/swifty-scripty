@@ -8,52 +8,52 @@ import Foundation
 //sourcery: AutoMockable
 public protocol Git {
     /// The root directory of the Git repository.
-    var root: String? { get }
-    
+    func getRoot() async -> String?
+
     /// Checks if there are any changes in the Git repository.
     ///
     /// - Returns: `true` if there are changes in the repository, `false` otherwise.
-    func hasRepoChanges() -> Bool
-    
+    func hasRepoChanges() async -> Bool
+
     /// Discards all changes in the Git repository.
-    func discardChanges()
-    
+    func discardChanges() async
+
     /// Stages all changes in the Git repository.
-    func stageChanges()
-    
+    func stageChanges() async
+
     /// Commits changes in the Git repository with the specified message.
     ///
     /// - Parameter message: The commit message.
-    func commitChanges(message: String)
-    
+    func commitChanges(message: String) async
+
     /// Pulls changes from the remote repository.
-    func pull()
-    
+    func pull() async
+
     /// Pushes changes to the remote repository.
-    func push()
-    
+    func push() async
+
     /// Creates a new branch with the specified name.
     ///
     /// - Parameter branchName: The name of the new branch.
-    func createBranch(branchName: String)
-    
+    func createBranch(branchName: String) async
+
     /// Switches to the specified branch.
     ///
     /// - Parameter branchName: The name of the branch to switch to.
-    func switchToBranch(branchName: String)
-    
+    func switchToBranch(branchName: String) async
+
     /// Merges the specified branch into the current branch.
     ///
     /// - Parameter branchName: The name of the branch to merge.
-    func mergeBranch(branchName: String)
-    
+    func mergeBranch(branchName: String) async
+
     /// Deletes the specified branch.
     ///
     /// - Parameter branchName: The name of the branch to delete.
-    func deleteBranch(branchName: String)
-    
+    func deleteBranch(branchName: String) async
+
     /// Shows the Git log.
-    func showLog()
+    func showLog() async
 }
 
 // MARK: - Git Implementation
@@ -65,55 +65,57 @@ struct GitImpl: Git {
     /// The shell utility used to execute commands.
     @Injected(\.shell) var shell: Shell
 
-    var root: String? {
-        shell.zsh(command: "git rev-parse --show-toplevel")
+    func getRoot() async -> String? {
+        let commandOutput = await shell.run(command: "git rev-parse --show-toplevel")
+        guard commandOutput.succeeded else { return nil }
+
+        return commandOutput.output
     }
 
-    func hasRepoChanges() -> Bool {
-        guard let gitStatus = shell.zsh(command: "git status --porcelain") else {
-            return false
-        }
+    func hasRepoChanges() async -> Bool {
+        let gitStatus = await shell.run(command: "git status --porcelain")
+        guard gitStatus.succeeded else { return false }
 
-        return !gitStatus.isEmpty
+        return !gitStatus.output.isEmpty
     }
 
-    func discardChanges() {
-        shell.runZsh(command: "git checkout .")
+    func discardChanges() async {
+        _ = await shell.run(command: "git checkout .")
     }
     
-    func stageChanges() {
-        shell.runZsh(command: "git add .")
+    func stageChanges() async {
+        _ = await shell.run(command: "git add .")
     }
     
-    func commitChanges(message: String) {
-        shell.runZsh(command: "git commit -m \"\(message)\"")
+    func commitChanges(message: String) async {
+        _ = await shell.run(command: "git commit -m \"\(message)\"")
     }
     
-    func pull() {
-        shell.runZsh(command: "git pull")
+    func pull() async {
+        _ = await shell.run(command: "git pull")
     }
     
-    func push() {
-        shell.runZsh(command: "git push")
+    func push() async {
+        _ = await shell.run(command: "git push")
     }
     
-    func createBranch(branchName: String) {
-        shell.runZsh(command: "git checkout -b \(branchName)")
+    func createBranch(branchName: String) async {
+        _ = await shell.run(command: "git checkout -b \(branchName)")
     }
     
-    func switchToBranch(branchName: String) {
-        shell.runZsh(command: "git checkout \(branchName)")
+    func switchToBranch(branchName: String) async {
+        _ = await shell.run(command: "git checkout \(branchName)")
     }
     
-    func mergeBranch(branchName: String) {
-        shell.runZsh(command: "git merge \(branchName)")
+    func mergeBranch(branchName: String) async {
+        _ = await shell.run(command: "git merge \(branchName)")
     }
     
-    func deleteBranch(branchName: String) {
-        shell.runZsh(command: "git branch -d \(branchName)")
+    func deleteBranch(branchName: String) async {
+        _ = await shell.run(command: "git branch -d \(branchName)")
     }
     
-    func showLog() {
-        shell.runZsh(command: "git log")
+    func showLog() async {
+        _ = await shell.run(command: "git log")
     }
 }
