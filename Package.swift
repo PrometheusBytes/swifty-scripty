@@ -16,9 +16,16 @@ let package = Package(
         .library(
             name: "SwiftyScriptyMocks",
             targets: ["SwiftyScriptyMocks"]
+        ),
+        .executable(
+            name: "SwiftyScriptyCLI",
+            targets: ["SwiftyScriptyCLI"]
         )
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.0")),
+        .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "5.1.3"))
+    ],
     targets: [
         
         // MARK: - Swifty Scripty
@@ -37,6 +44,19 @@ let package = Package(
             dependencies: ["SwiftyScripty"],
             path: "Mocks"
         ),
+        
+        // MARK:  Swifty Scripty CLI
+        
+        .executableTarget(
+            name: "SwiftyScriptyCLI",
+            dependencies: [
+                "SwiftyScripty",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "Yams",
+            ],
+            path: "Sources/SwiftyScriptyCLI",
+            resources: [.copy("Resources")]
+        ),
 
         // MARK:  Swifty Scripty Test Target
         
@@ -44,6 +64,7 @@ let package = Package(
             name: "SwiftyScriptyTests",
             dependencies: [
                 "SwiftyScripty",
+                "SwiftyScriptyCLI",
                 "SwiftyScriptyMocks"
             ],
             path: "Tests"
