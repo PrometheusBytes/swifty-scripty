@@ -204,8 +204,8 @@ extension SwiftyScriptyCLI {
 
         shell.print(color: .green, text: "")
         switch answer {
-        case .buildScript: runBuildScript(at: url, printType: .interactive)
-        case .setupScript: runSetupScript(at: url, print: .interactive)
+        case .buildScript: await runBuildScript(at: url, printType: .interactive)
+        case .setupScript: await runSetupScript(at: url, print: .interactive)
         case .generateScript: await runMakeScript(at: url)
         case .help:
             if await printHelp() {
@@ -244,27 +244,27 @@ private extension SwiftyScriptyCLI {
     func runStandard(for configuration: Configuration, and url: URL) async {
         switch configuration {
         case .setup:
-            runSetupScript(at: url, print: verbose ? .verbose : .standard)
+            await runSetupScript(at: url, print: verbose ? .verbose : .standard)
         case .build:
-            runBuildScript(at: url, printType: verbose ? .verbose : .standard)
+            await runBuildScript(at: url, printType: verbose ? .verbose : .standard)
         case let .generate(scriptName):
             await runMakeScript(name: scriptName, at: url, printType: verbose ? .verbose : .standard)
         case .interactive: break
         }
     }
 
-    func runSetupScript(at path: URL, print: PrintType) {
+    func runSetupScript(at path: URL, print: PrintType) async {
         do {
-            try setupScript.setup(at: path, print: print)
+            try await setupScript.setup(at: path, print: print)
         } catch {
             shell.print(color: .red, text: "ERROR: \(error.localizedDescription)")
             shell.exit(with: .errorExitCode)
         }
     }
 
-    func runBuildScript(at path: URL, printType: PrintType) {
+    func runBuildScript(at path: URL, printType: PrintType) async {
         do {
-            try setupScript.build(at: path, print: printType)
+            try await setupScript.build(at: path, print: printType)
         } catch  {
             shell.print(color: .red, text: "ERROR: \(error.localizedDescription)")
             shell.exit(with: .errorExitCode)

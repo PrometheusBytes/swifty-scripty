@@ -80,7 +80,7 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
         if print == .interactive { shell.clear(numberOfLines: 1) }
         shell.print(color: .green, text: "✅ Configuration File Created")
 
-        try setupScript.build(at: folderPath, print: print)
+        try await setupScript.build(at: folderPath, print: print)
     }
     
     // MARK: - Generate Swift Package

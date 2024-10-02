@@ -5,25 +5,21 @@ import Yams
 
 //sourcery: AutoMockable
 public protocol SetupScript {
-    func setup(at path: URL, print: PrintType) throws
+    func setup(at path: URL, print: PrintType) async throws
     func build(
         at path: URL,
         with configuration: ScriptConfiguration?,
         print: PrintType
-    ) throws
+    ) async throws
 }
 
 extension SetupScript {
-    func setup(at path: URL, print: PrintType = .standard) throws {
-        try setup(at: path, print: print)
+    func setup(at path: URL) async throws {
+        try await setup(at: path, print: .standard)
     }
 
-    func build(
-        at path: URL,
-        with configuration: ScriptConfiguration? = nil,
-        print: PrintType = .standard
-    ) throws {
-        try build(at: path, with: nil, print: print)
+    func build(at path: URL, print: PrintType = .standard) async throws {
+        try await build(at: path, with: nil, print: print)
     }
 }
 
