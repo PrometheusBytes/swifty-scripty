@@ -42,7 +42,7 @@ let package = Package(
         .target(
             name: "SwiftyScriptyMocks",
             dependencies: ["SwiftyScripty"],
-            path: "Mocks"
+            path: "Mocks/SwiftyScripty"
         ),
         
         // MARK:  Swifty Scripty CLI
@@ -58,16 +58,36 @@ let package = Package(
             resources: [.copy("Resources")]
         ),
 
+        // MARK:  Swifty Scripty CLI Mocks
+
+        .target(
+            name: "SwiftyScriptyCLIMocks",
+            dependencies: ["SwiftyScriptyCLI"],
+            path: "Mocks/SwiftyScriptyCLI"
+        ),
+
         // MARK:  Swifty Scripty Test Target
         
         .testTarget(
             name: "SwiftyScriptyTests",
             dependencies: [
                 "SwiftyScripty",
-                "SwiftyScriptyCLI",
                 "SwiftyScriptyMocks"
             ],
-            path: "Tests"
+            path: "Tests/SwiftyScripty"
+        ),
+
+        // MARK:  Swifty Scripty CLI Test Target
+
+        .testTarget(
+            name: "SwiftyScriptyCLITests",
+            dependencies: [
+                "SwiftyScripty",
+                "SwiftyScriptyMocks",
+                "SwiftyScriptyCLI",
+                "SwiftyScriptyCLIMocks"
+            ],
+            path: "Tests/SwiftyScriptyCLI"
         )
     ]
 )
