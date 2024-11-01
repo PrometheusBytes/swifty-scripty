@@ -1,0 +1,18 @@
+{
+    "scripts": [
+        {
+            "name": "SwiftyScripty",
+            "sources": "./Sources/SwiftyScripty",
+            "generated-injection-keys-path": "./Sources/SwiftyScripty/Generated",
+            "generated-mocks-path": "./Mocks/SwiftyScripty/Generated",
+            "generated-mock-keys-path": "./Mocks/SwiftyScripty/Generated"
+        },
+        {
+            "name": "SwiftyScriptyCLI",
+            "sources": "./Sources/SwiftyScriptyCLI",
+            "generated-injection-keys-path": "./Sources/SwiftyScriptyCLI/Generated",
+            "generated-mocks-path": "./Mocks/SwiftyScriptyCLI/Generated",
+            "generated-mock-keys-path": "./Mocks/SwiftyScriptyCLI/Generated"
+        }
+    ]
+}
