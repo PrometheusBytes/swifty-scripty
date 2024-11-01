@@ -266,7 +266,6 @@ private extension SwiftyScriptyCLI {
         do {
             try await setupScript.build(at: path, print: printType)
         } catch  {
-            shell.print(color: .red, text: "ERROR: \(error.localizedDescription)")
             shell.exit(with: .errorExitCode)
         }
     }

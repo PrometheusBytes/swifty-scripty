@@ -91,7 +91,10 @@ struct SetupScriptImpl: SetupScript {
     ) async throws {
         let config = try configuration ?? readScriptConfiguration(at: path)
 
+        var hasError = false
         for scriptConfiguration in config.scripts {
+            if scriptConfiguration.skipBuild { continue }
+
             // Delete previous script
             if fileUtility.fileExists(at: path.appending(path: scriptConfiguration.scriptName)) {
                 fileUtility.deleteFile(at: path.appending(path: scriptConfiguration.scriptName))
@@ -113,10 +116,15 @@ struct SetupScriptImpl: SetupScript {
             case .standard: break
             }
 
-            guard commandOutput.succeeded else { throw SetupScriptModels.Errors.buildingScript }
-
-            shell.print(color: .green, text: "✅ Script Built")
+            if commandOutput.succeeded {
+                shell.print(color: .green, text: "✅ Script Built")
+            } else {
+                hasError = true
+                shell.print(color: .red, text: SetupScriptModels.Errors.buildingScript.localizedDescription)
+            }
         }
+
+        if hasError { throw SetupScriptModels.Errors.buildingScript }
     }
 }
 

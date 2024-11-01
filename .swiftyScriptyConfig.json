@@ -5,7 +5,8 @@
             "sources": "./Sources/SwiftyScripty",
             "generated-injection-keys-path": "./Sources/SwiftyScripty/Generated",
             "generated-mocks-path": "./Mocks/SwiftyScripty/Generated",
-            "generated-mock-keys-path": "./Mocks/SwiftyScripty/Generated"
+            "generated-mock-keys-path": "./Mocks/SwiftyScripty/Generated",
+            "skip-build": true
         },
         {
             "name": "SwiftyScriptyCLI",

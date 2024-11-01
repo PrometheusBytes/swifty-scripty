@@ -1,4 +1,4 @@
-.PHONY: tests setup mocks clean list build_clean_script
+.PHONY: cli remove-cli
 
 list:
 	@echo "\n==========================="
@@ -6,10 +6,12 @@ list:
 	@echo "==========================="
 	@echo "==     Commands list     =="
 	@echo "==========================="
-	@echo "build_scripts"
+	@echo "cli"
+	@echo "remove-cli"
 
-build_scripts:
-	@swift package clean
-	@swiftyscripty -s
+cli:
 	@swift build --configuration release
-	@cp -f .build/release/SwiftyScriptyCLI ./SwiftyScriptyCLI
+	@sudo cp -f .build/release/SwiftyScriptyCLI /usr/local/bin/swiftyscripty
+
+remove-cli:
+	@sudo rm /usr/local/bin/swiftyscripty
