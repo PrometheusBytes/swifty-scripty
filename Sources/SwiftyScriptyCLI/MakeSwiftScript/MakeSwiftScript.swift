@@ -192,8 +192,8 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
     // MARK: - Generate Configuration File
 
     func generateConfigurationFile(at path: URL, name: String) -> Bool {
-        let configurationPath = path.appending(path: ".swiftyScriptyConfig.yml")
-        guard 
+        let configurationPath = path.appending(path: ".swiftyScriptyConfig.json")
+        guard
             let scriptConfigurationPath,
             let configurationFileContent = fileUtility.readFile(at: scriptConfigurationPath)
         else {

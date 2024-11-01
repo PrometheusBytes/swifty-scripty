@@ -1,5 +1,11 @@
-name: "{{ scriptName }}"
-sources: "./Sources/{{ scriptName }}"
-generated-injection-keys-path: "./Sources/{{ scriptName }}/Generated"
-generated-mocks-path: "./Mocks/Generated"
-generated-mock-keys-path: "./Mocks/Generated"
+{
+    "scripts": [
+        {
+            "name": "{{ scriptName }}",
+            "sources": "./Sources/{{ scriptName }}",
+            "generated-injection-keys-path": "./Sources/{{ scriptName }}/Generated",
+            "generated-mocks-path": "./Mocks/{{ scriptName }}/Generated",
+            "generated-mock-keys-path": "./Mocks/{{ scriptName }}/Generated"
+        }
+    ]
+}
