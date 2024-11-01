@@ -12,7 +12,7 @@ import {{ argument.scriptName }}
 {% endif %}
 {% endif %}
 
-extension {{ type.name }}Key: InjectionTest {
+extension {{ type.name }}Key: @retroactive InjectionTest {
     public static var testValue: {{ type.name }} = {{ type.name }}Mock()
 }
 

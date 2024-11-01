@@ -5,6 +5,6 @@ import Foundation
 import SwiftyScripty
 import SwiftyScriptyCLI
 
-extension InteractiveMenuKey: InjectionTest {
+extension InteractiveMenuKey: @retroactive InjectionTest {
     public static var testValue: InteractiveMenu = InteractiveMenuMock()
 }

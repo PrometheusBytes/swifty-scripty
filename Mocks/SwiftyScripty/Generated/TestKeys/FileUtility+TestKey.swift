@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension FileUtilityKey: InjectionTest {
+extension FileUtilityKey: @retroactive InjectionTest {
     public static var testValue: FileUtility = FileUtilityMock()
 }

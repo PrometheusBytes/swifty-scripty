@@ -5,6 +5,6 @@ import Foundation
 import SwiftyScripty
 import SwiftyScriptyCLI
 
-extension MakeSwiftScriptKey: InjectionTest {
+extension MakeSwiftScriptKey: @retroactive InjectionTest {
     public static var testValue: MakeSwiftScript = MakeSwiftScriptMock()
 }

@@ -5,6 +5,6 @@ import Foundation
 import SwiftyScripty
 import SwiftyScriptyCLI
 
-extension SetupScriptKey: InjectionTest {
+extension SetupScriptKey: @retroactive InjectionTest {
     public static var testValue: SetupScript = SetupScriptMock()
 }

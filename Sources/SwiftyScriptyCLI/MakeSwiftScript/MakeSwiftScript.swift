@@ -138,7 +138,8 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
             outputPath: path.appending(path: "Package.swift"),
             args: [
                 .init(key: "scriptName", value: name)
-            ]
+            ],
+            trimSourceryHeader: true
         )
     }
     
