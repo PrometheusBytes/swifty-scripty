@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "SwiftyScriptyTests",
-        "name" : "SwiftyScriptyTests"
+        "identifier" : "SwiftyScriptyCLITests",
+        "name" : "SwiftyScriptyCLITests"
       }
     }
   ],
