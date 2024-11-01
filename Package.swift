@@ -24,7 +24,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.0")),
-        .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "5.1.3"))
     ],
     targets: [
         
@@ -51,8 +50,7 @@ let package = Package(
             name: "SwiftyScriptyCLI",
             dependencies: [
                 "SwiftyScripty",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "Yams",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             path: "Sources/SwiftyScriptyCLI",
             resources: [.copy("Resources")]
