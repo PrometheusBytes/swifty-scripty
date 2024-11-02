@@ -52,39 +52,38 @@ extension ProcessRunnerImpl {
         )
 
         let stream = AsyncStream<SwiftyProcess.Output> { continuation in
-            defer { continuation.finish() }
-            var shouldStartOutput = false
+            Task {
+                defer { continuation.finish() }
 
-            pipe.fileHandleForReading.readabilityHandler = { pipe in
-                guard let data = String(data: pipe.availableData, encoding: .utf8), !data.isEmpty else { return }
-
-                guard shouldStartOutput else {
-                    if data == scriptStartToken {
-                        shouldStartOutput = true
+                async let standardOutputTask: Void = {
+                    var shouldStartOutput = false
+                    for try await line in pipe.fileHandleForReading.bytes.lines {
+                        if shouldStartOutput {
+                            continuation.yield(.output(line))
+                        } else if line == scriptStartToken {
+                            shouldStartOutput = true
+                        }
                     }
+                }()
 
+                async let errorOutputTask: Void = {
+                    for try await line in errorPipe.fileHandleForReading.bytes.lines {
+                        continuation.yield(.error(line))
+                    }
+                }()
+
+                do {
+                    try process.run()
+                    moveToForeground(process)
+                    process.waitUntilExit()
+                    _ = try await (standardOutputTask, errorOutputTask)
+                    restoreDefaultForegroundProcess()
+                    continuation.yield(.exitCode(process.terminationStatus))
+                    return
+                } catch {
+                    continuation.yield(.failureRunningProcess(error))
                     return
                 }
-
-                continuation.yield(.output(data))
-            }
-
-            errorPipe.fileHandleForReading.readabilityHandler = { pipe in
-                guard let data = String(data: pipe.availableData, encoding: .utf8), !data.isEmpty else { return }
-
-                continuation.yield(.error(data))
-            }
-
-            do {
-                try process.run()
-                moveToForeground(process)
-                process.waitUntilExit()
-                restoreDefaultForegroundProcess()
-                continuation.yield(.exitCode(process.terminationStatus))
-                return
-            } catch {
-                continuation.yield(.failureRunningProcess(error))
-                return
             }
         }
 
