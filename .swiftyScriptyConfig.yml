@@ -1,5 +1,0 @@
-name: "SwiftyScripty"
-sources: "./Sources/SwiftyScripty"
-generated-injection-keys-path: "./Sources/SwiftyScripty/Generated"
-generated-mocks-path: "./Mocks/Generated"
-generated-mock-keys-path: "./Mocks/Generated"

@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension SourceryWrapperKey: InjectionTest {
-    public static var testValue: SourceryWrapper = SourceryWrapperMock()
+extension ShellKey: @retroactive InjectionTest {
+    public static var testValue: Shell = ShellMock()
 }

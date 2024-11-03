@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "B513379A-0403-41A5-A7B8-FBAB917BC866",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftyScriptyCLITests",
+        "name" : "SwiftyScriptyCLITests"
+      }
+    }
+  ],
+  "version" : 1
+}

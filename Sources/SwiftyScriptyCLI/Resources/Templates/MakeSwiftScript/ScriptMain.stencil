@@ -1,0 +1,19 @@
+{% macro generateMain name %}
+
+@main
+public struct {{ name }} {
+    @Injected(\.shell) var shell: Shell
+
+    public static func main() {
+        {{ name }}().main(args: CommandLine.arguments)
+    }
+
+    public func main(args: [String] = []) {
+        shell.print(color: .green, text: "Hello World!")
+    }
+}
+{% endmacro %}
+import Foundation
+import SwiftyScripty
+
+{% call generateMain argument.scriptName %}

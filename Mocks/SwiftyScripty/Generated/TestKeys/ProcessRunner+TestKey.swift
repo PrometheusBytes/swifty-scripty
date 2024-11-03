@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension ShellKey: InjectionTest {
-    public static var testValue: Shell = ShellMock()
+extension ProcessRunnerKey: @retroactive InjectionTest {
+    public static var testValue: ProcessRunner = ProcessRunnerMock()
 }

@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension GitKey: InjectionTest {
-    public static var testValue: Git = GitMock()
+extension FileUtilityKey: @retroactive InjectionTest {
+    public static var testValue: FileUtility = FileUtilityMock()
 }

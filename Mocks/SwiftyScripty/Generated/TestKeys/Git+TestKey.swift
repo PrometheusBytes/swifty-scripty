@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension ProcessRunnerKey: InjectionTest {
-    public static var testValue: ProcessRunner = ProcessRunnerMock()
+extension GitKey: @retroactive InjectionTest {
+    public static var testValue: Git = GitMock()
 }

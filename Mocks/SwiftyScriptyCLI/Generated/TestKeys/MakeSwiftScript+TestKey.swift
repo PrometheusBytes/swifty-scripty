@@ -3,7 +3,8 @@
 // swiftlint:disable all
 import Foundation
 import SwiftyScripty
+import SwiftyScriptyCLI
 
-extension SwiftPackageKey: InjectionTest {
-    public static var testValue: SwiftPackage = SwiftPackageMock()
+extension MakeSwiftScriptKey: @retroactive InjectionTest {
+    public static var testValue: MakeSwiftScript = MakeSwiftScriptMock()
 }
