@@ -5,7 +5,7 @@
 import Foundation
 import SwiftyScriptyCLI
 
-public class InteractiveMenuMock: InteractiveMenu {
+public class InteractiveShellMenuMock: InteractiveShellMenu {
 
     public init() {}
 

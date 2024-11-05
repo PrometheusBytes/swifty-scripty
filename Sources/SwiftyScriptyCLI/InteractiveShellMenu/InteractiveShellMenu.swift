@@ -2,7 +2,7 @@ import Foundation
 import SwiftyScripty
 
 //sourcery: AutoMockable
-public protocol InteractiveMenu {
+public protocol InteractiveShellMenu {
     func getAnswer(
         message: String,
         given options: [MenuOption]
@@ -15,13 +15,13 @@ public protocol MenuOption {
     var clearAfter: Bool { get }
 }
 
-struct InteractiveMenuImpl {
+struct InteractiveShellMenuImpl {
     // MARK: - Properties
 
     @Injected(\.shell) var shell
 }
 
-extension InteractiveMenuImpl: InteractiveMenu  {
+extension InteractiveShellMenuImpl: InteractiveShellMenu  {
     func getAnswer(
         message: String,
         given options: [MenuOption]
