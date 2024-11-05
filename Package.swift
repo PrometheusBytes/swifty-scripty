@@ -20,6 +20,10 @@ let package = Package(
         .executable(
             name: "SwiftyScriptyCLI",
             targets: ["SwiftyScriptyCLI"]
+        ),
+        .executable(
+            name: "SwiftyScriptyApp",
+            targets: ["SwiftyScriptyApp"]
         )
     ],
     dependencies: [
@@ -31,9 +35,25 @@ let package = Package(
         
         .target(
             name: "SwiftyScripty",
+            dependencies: ["SwiftyScriptyAppViews"],
             path: "Sources/SwiftyScripty",
             resources: [.copy("Resources")],
             swiftSettings: [.define("DEBUG", .when(configuration: .debug))]
+        ),
+
+        // MARK: - Swifty Scripty App
+
+        .executableTarget(
+            name: "SwiftyScriptyApp",
+            dependencies: ["SwiftyScripty", "SwiftyScriptyAppViews"],
+            path: "Sources/SwiftyScriptyApp"
+        ),
+
+        // MARK: - Swifty Scripty App Views
+
+        .target(
+            name: "SwiftyScriptyAppViews",
+            path: "Sources/SwiftyScriptyAppViews"
         ),
 
         // MARK:  Swifty Scripty Mocks
