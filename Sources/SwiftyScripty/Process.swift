@@ -101,21 +101,22 @@ private extension ProcessRunnerImpl {
     private func configureStandardProcessAndPipe(
         command: String,
         shellType: ShellType
-    ) -> (process: Process, pipe: Pipe, errorPipe: Pipe, outputPipe: Pipe) {
+    ) -> (process: Process, pipe: Pipe, errorPipe: Pipe, inputPipe: Pipe) {
         let process = Process()
         let pipe = Pipe()
         let errorPipe = Pipe()
-        let outputPipe = Pipe()
+        let inputPipe = Pipe()
 
         process.standardOutput = pipe
         process.standardError = errorPipe
         process.launchPath = shellType.rawValue
+        process.standardInput = inputPipe
         #if DEBUG
         process.arguments = ["-i", "-l", "-c", command]
         #else
         process.arguments = ["-c", command]
         #endif
-        return (process, pipe, errorPipe, outputPipe)
+        return (process, pipe, errorPipe, inputPipe)
     }
 
     private func moveToForeground(_ process: Process) {
