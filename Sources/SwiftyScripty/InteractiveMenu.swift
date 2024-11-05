@@ -36,11 +36,7 @@ struct InteractiveMenuImpl: InteractiveMenu {
         }
 
         let process = processRunner.run(command: binaryPath, shellType: .zsh)
-        do {
-            process.write(data: objectData, terminateOnFailure: true)
-        } catch {
-            return nil
-        }
+        process.write(data: objectData, terminateOnFailure: true)
 
         for await data in process.stream {
             switch data {

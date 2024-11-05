@@ -20,5 +20,10 @@ public extension SwiftyScripty.Menu {
     struct PickerData: Codable {
         public let title: String
         public let data: [PassableData]
+
+        public init(title: String, data: [PassableData]) {
+            self.title = title
+            self.data = data
+        }
     }
 }

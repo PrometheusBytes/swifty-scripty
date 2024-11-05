@@ -31,12 +31,24 @@ public struct AppMainScript {
     }
 
     func readDataFromStdin() -> Data? {
+        #if DEBUG
+        let object = SwiftyScripty.Menu.PickerData(
+            title: "Test",
+            data: [
+                .init(representation: "Option 1", id: 1),
+                .init(representation: "Option 2", id: 2)
+            ]
+        )
+        let data = (try? JSONEncoder().encode(object))!
+        return data
+        #else
         let handle = FileHandle.standardInput
         guard let data =  try? handle.readToEnd() else {
             return nil
         }
 
         return data
+        #endif
     }
 
     func writeDataToStdout(_ data: Data) {
