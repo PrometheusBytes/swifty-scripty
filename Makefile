@@ -1,4 +1,4 @@
-.PHONY: cli remove-cli
+.PHONY: cli remove-cli build build-app
 
 list:
 	@echo "\n==========================="
@@ -8,9 +8,17 @@ list:
 	@echo "==========================="
 	@echo "cli"
 	@echo "remove-cli"
+	@echo "build-app"
+
+build:
+	@swift build --configuration release
+
+build-app:
+	@make build
+	@mv .build/release/SwiftyScriptyApp Sources/SwiftyScripty/Resources/Binaries/SwiftyScriptyApp
 
 cli:
-	@swift build --configuration release
+	@make build
 	@sudo cp -f .build/release/SwiftyScriptyCLI /usr/local/bin/swiftyscripty
 
 remove-cli:
