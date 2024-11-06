@@ -19,18 +19,6 @@ public struct AppMainScript {
     }
 
     func readInput() -> SwiftyScripty.Menu.PickerData? {
-        do {
-            if let inputData = readDataFromStdin() {
-                return try JSONDecoder().decode(SwiftyScripty.Menu.PickerData.self, from: inputData)
-            } else {
-                return nil
-            }
-        } catch {
-            return nil
-        }
-    }
-
-    func readDataFromStdin() -> Data? {
         #if DEBUG
         let object = SwiftyScripty.Menu.PickerData(
             title: "Test",
@@ -39,15 +27,17 @@ public struct AppMainScript {
                 .init(representation: "Option 2", id: 2)
             ]
         )
-        let data = (try? JSONEncoder().encode(object))!
-        return data
+        return object
         #else
         let handle = FileHandle.standardInput
-        guard let data =  try? handle.readToEnd() else {
+        guard
+            let rawData = try? handle.readToEnd(),
+            let data = Data(base64Encoded: rawData)
+        else {
             return nil
         }
 
-        return data
+        return try? JSONDecoder().decode(SwiftyScripty.Menu.PickerData.self, from: data)
         #endif
     }
 

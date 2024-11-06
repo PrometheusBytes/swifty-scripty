@@ -36,7 +36,7 @@ struct InteractiveMenuImpl: InteractiveMenu {
         }
 
         let process = processRunner.run(command: binaryPath, shellType: .zsh)
-        process.write(data: objectData, terminateOnFailure: true)
+        process.write(string: objectData.base64EncodedString(), terminateOnFailure: true)
 
         for await data in process.stream {
             switch data {
@@ -54,10 +54,5 @@ struct InteractiveMenuImpl: InteractiveMenu {
         }
 
         return nil
-    }
-
-    func writeData(for data: Data, in pipe: Pipe) throws {
-        try pipe.fileHandleForWriting.write(contentsOf: data)
-        try pipe.fileHandleForWriting.close()
     }
 }
