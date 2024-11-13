@@ -51,7 +51,7 @@ struct SwiftyScriptyCLI: AsyncParsableCommand {
     @Injected(\.setupScript) var setupScript: SetupScript    
     @Injected(\.shell) var shell: Shell
     @Injected(\.fileUtility) var fileUtility: FileUtility
-    @Injected(\.interactiveMenu) var interactiveMenu: InteractiveMenu
+    @Injected(\.interactiveShellMenu) var interactiveShellMenu: InteractiveShellMenu
     @Injected(\.makeSwiftScript) var makeSwiftScript: MakeSwiftScript
 
     // MARK: - Run
@@ -197,7 +197,7 @@ extension SwiftyScriptyCLI {
         What would you like to do?
         """
 
-        guard let answer = await interactiveMenu.getAnswer(
+        guard let answer = await interactiveShellMenu.getAnswer(
             message: welcomeMessage,
             given: MenuOptions.allCases
         ) as? MenuOptions else { return }
@@ -227,7 +227,7 @@ extension SwiftyScriptyCLI {
             shell.print(color: .clear, text: "\(menuCase.explanation(tabs: 1))")
         }
 
-        guard let answer = await interactiveMenu.getAnswer(
+        guard let answer = await interactiveShellMenu.getAnswer(
             message: "Would you like to pick another option?",
             given: YesNoOptions.allCases
         ) as? YesNoOptions else {
