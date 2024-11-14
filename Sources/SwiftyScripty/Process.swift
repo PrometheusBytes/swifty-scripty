@@ -34,54 +34,28 @@ public extension ProcessRunner {
 
 /// An implementation of the `ProcessRunner`.
 struct ProcessRunnerImpl: ProcessRunner {
-
-    // MARK: - Properties
-
-    /// A token used to identify the start of an interactive shell script output.
-    let scriptStartToken = "<--Swift Script Interactive Shell Start-->"
-}
-
-// MARK: - ProcessRunner Protocol Conformance
-
-extension ProcessRunnerImpl {
     func run(command: String, shellType: ShellType) -> SwiftyProcess {
-        let newCommand = "echo \"\(scriptStartToken)\"; " + command
         let (process, pipe, errorPipe, inputPipe) = configureStandardProcessAndPipe(
-            command: newCommand,
+            command: buildCommand(from: command),
             shellType: shellType
         )
 
-        let stream = AsyncStream<SwiftyProcess.Output> { continuation in
+        let stream = AsyncStream<SwiftyProcess.Output> { stream in
             Task {
-                defer { continuation.finish() }
+                defer { stream.finish() }
 
-                async let standardOutputTask: Void = {
-                    var shouldStartOutput = false
-                    for try await line in pipe.fileHandleForReading.bytes.lines {
-                        if shouldStartOutput {
-                            continuation.yield(.output(line))
-                        } else if line == scriptStartToken {
-                            shouldStartOutput = true
-                        }
-                    }
-                }()
-
-                async let errorOutputTask: Void = {
-                    for try await line in errorPipe.fileHandleForReading.bytes.lines {
-                        continuation.yield(.error(line))
-                    }
-                }()
+                async let pipeReadTask = pipeTask(for: pipe, and: stream)
+                async let errorPipeReadTask = errorPipeTask(for: errorPipe, and: stream)
 
                 do {
                     try process.run()
                     moveToForeground(process)
                     process.waitUntilExit()
-                    _ = try await (standardOutputTask, errorOutputTask)
                     restoreDefaultForegroundProcess()
-                    continuation.yield(.exitCode(process.terminationStatus))
+                    _ = try? await (pipeReadTask.value, errorPipeReadTask.value)
                     return
                 } catch {
-                    continuation.yield(.failureRunningProcess(error))
+                    stream.yield(.failureRunningProcess(error))
                     return
                 }
             }
@@ -98,6 +72,71 @@ extension ProcessRunnerImpl {
 // MARK: - Private Helpers
 
 private extension ProcessRunnerImpl {
+    private func pipeTask(
+        for pipe: Pipe,
+        and stream: AsyncStream<SwiftyProcess.Output>.Continuation
+    ) -> Task<Void, any Error> {
+        TaskProvider.cancellableContinuationTask { continuation in
+            let readHandler = ReadHandlerActor()
+
+            pipe.fileHandleForReading.setStringHandler { string in
+                for line in Line.getLines(from: string) {
+                    switch line {
+                    case let .commandExitCode(code):
+                        stream.yield(.exitCode(code))
+                    case .startToken:
+                        await readHandler.setStartPrint()
+                    case .endToken:
+                        pipe.fileHandleForReading.readabilityHandler = nil
+                        continuation.resume()
+                    case let .line(text) where await readHandler.canPrint():
+                        stream.yield(.output(text))
+                    case .endErrorToken, .line: break
+                    }
+                }
+            }
+        } onCancel: {
+            pipe.fileHandleForReading.readabilityHandler = nil
+        }
+    }
+
+    private func errorPipeTask(
+        for pipe: Pipe,
+        and stream: AsyncStream<SwiftyProcess.Output>.Continuation
+    ) -> Task<Void, any Error> {
+        TaskProvider.cancellableContinuationTask { continuation in
+            pipe.fileHandleForReading.setStringHandler { string in
+                Line.getLines(from: string).forEach { line in
+                    switch line {
+                    case .endErrorToken:
+                        pipe.fileHandleForReading.readabilityHandler = nil
+                        continuation.resume()
+                    case let .line(text):
+                        stream.yield(.error(text))
+                    case .endToken, .startToken, .commandExitCode: break
+                    }
+                }
+            }
+        } onCancel: {
+            pipe.fileHandleForReading.readabilityHandler = nil
+        }
+    }
+
+    private func buildCommand(from originalCommand: String) -> String {
+        let newCommand = [
+            // Print start token
+            "echo \"\(Separator.scriptStartToken)\"",
+            // Subshell command and get exit code
+            "(\(originalCommand)) || echo \"\(Separator.scriptExitCodeToken)\"",
+            // Print end token
+            "echo \"\(Separator.scriptEndToken)\"",
+            // Print end error pipe token
+            "echo \"\(Separator.scriptErrorPipeEndToken)\" >&2"
+        ]
+
+        return newCommand.joined(separator: ";")
+    }
+
     private func configureStandardProcessAndPipe(
         command: String,
         shellType: ShellType
