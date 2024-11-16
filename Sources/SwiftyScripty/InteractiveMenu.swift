@@ -49,7 +49,7 @@ struct InteractiveMenuImpl: InteractiveMenu {
                 }
 
             case .failureRunningProcess, .exitCode, .error:
-                return nil
+                break
             }
         }
 
