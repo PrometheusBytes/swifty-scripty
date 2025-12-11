@@ -18,7 +18,7 @@ SwiftyScripty is a Swift package that enables you to create new scripts using a 
 
 To install `SwiftyScripty`, follow these steps:
 
-1. Download the binary file provided [here](https://github.com/PrometheusBytes/swifty-scripty/releases/download/0.3.0/swiftyscripty).
+1. Download the binary file provided [here](https://github.com/PrometheusBytes/swifty-scripty/releases/download/0.4.0/swiftyscripty).
 
 2. Place the binary in a directory included in your system's PATH.
 
