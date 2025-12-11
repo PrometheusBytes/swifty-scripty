@@ -80,6 +80,14 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
         if print == .interactive { shell.clear(numberOfLines: 1) }
         shell.print(color: .green, text: "✅ Configuration File Created")
 
+      shell.print(color: .yellow, text: "Generating Configuration File...")
+      guard generateConfigurationFile(at: folderPath, name: name) else {
+          if print == .interactive { shell.clear(numberOfLines: 1) }
+          throw Error.creatingConfigurationFile
+      }
+      if print == .interactive { shell.clear(numberOfLines: 1) }
+      shell.print(color: .green, text: "✅ Configuration File Created")
+
         try await setupScript.build(at: folderPath, print: print)
     }
     
@@ -146,19 +154,17 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
     // MARK: - Generate Main File
 
     func generateMainFile(at path: URL, name: String) async -> Command? {
-        let mainFilePath = path.appending(path: "Sources/main.swift")
         let newFilePath = path.appending(path: "Sources/\(name)/MainScript.swift")
+        let pathsToClean = [
+          newFilePath,
+          path.appending(path: "Sources/main.swift"),
+          path.appending(path: "Sources/\(name)/\(name).swift")
+        ]
         guard let scriptMainTemplatePath else {
             return nil
         }
 
-        if fileUtility.fileExists(at: mainFilePath) {
-            fileUtility.deleteFile(at: mainFilePath)
-        }
-
-        if fileUtility.fileExists(at: newFilePath) {
-            fileUtility.deleteFile(at: newFilePath)
-        }
+        pathsToClean.forEach { if fileUtility.fileExists(at: $0) { fileUtility.deleteFile(at: $0) } }
 
         return await sourceryWrapper.generateCode(
             templatePath: scriptMainTemplatePath,
@@ -166,7 +172,8 @@ struct MakeSwiftScriptImpl: MakeSwiftScript {
             outputPath: newFilePath,
             args: [
                 .init(key: "scriptName", value: name)
-            ]
+            ],
+            trimSourceryHeader: true
         )
     }
 
