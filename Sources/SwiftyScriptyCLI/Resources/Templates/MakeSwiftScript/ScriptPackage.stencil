@@ -9,7 +9,7 @@ let package = Package(
         .macOS(.v13)
     ],
     dependencies: [
-        .package(url: "https://github.com/PrometheusBytes/swifty-scripty", .upToNextMajor(from: "0.3.0")),
+        .package(url: "https://github.com/PrometheusBytes/swifty-scripty", .upToNextMajor(from: "0.5.0")),
     ],
     targets: [
         .executableTarget(
