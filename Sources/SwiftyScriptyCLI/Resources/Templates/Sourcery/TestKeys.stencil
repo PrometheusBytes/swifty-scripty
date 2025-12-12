@@ -1,6 +1,6 @@
 {% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}
 {% if type.name != "AutoMockable" %}
-{% if type|!annotated:"skipKeyCreation" %}
+{% if not type|annotated:"skipMockCreation" %}
 
 // sourcery:file:{{ type.name }}+TestKey.swift
 // swiftlint:disable all
@@ -18,6 +18,7 @@ extension {{ type.name }}Key: @retroactive InjectionTest {
 
 // sourcery:end
 
+{% endif %}
 {% endif %}
 {% endif %}
 {% endfor %}

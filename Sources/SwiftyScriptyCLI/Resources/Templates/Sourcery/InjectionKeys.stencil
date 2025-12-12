@@ -1,6 +1,6 @@
 {% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}
 {% if type.name != "AutoMockable" %}
-{% if type|!annotated:"skipKeyCreation" %}
+{% if not type|annotated:"skipKeyCreation" %}
 
 // sourcery:file:{{ type.name }}+InjectionKey.swift
 // swiftlint:disable all
