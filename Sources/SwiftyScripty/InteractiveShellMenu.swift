@@ -1,12 +1,12 @@
 import Foundation
 import SwiftyScripty
 
-//sourcery: AutoMockable
+//sourcery: AutoMockable, skipMockCreation
 public protocol InteractiveShellMenu {
-    func getAnswer(
+  func getAnswer<T: MenuOption>(
         message: String,
-        given options: [MenuOption]
-    ) async -> MenuOption?
+        given options: [T]
+    ) async -> T?
 }
 
 public protocol MenuOption {
@@ -22,10 +22,10 @@ struct InteractiveShellMenuImpl {
 }
 
 extension InteractiveShellMenuImpl: InteractiveShellMenu  {
-    func getAnswer(
+    func getAnswer<T: MenuOption>(
         message: String,
-        given options: [MenuOption]
-    ) async -> MenuOption? {
+        given options: [T]
+    ) async -> T? {
         guard var selection = Selection(options: options) else { return nil }
 
         shell.print(color: .green, text: message)
@@ -58,18 +58,18 @@ extension InteractiveShellMenuImpl: InteractiveShellMenu  {
         }
     }
 
-    struct Selection {
+    struct Selection<T: MenuOption> {
         enum Action {
             case up
             case down
         }
 
-        let options: [MenuOption]
+        let options: [T]
         var selectedIndex: Int = 0
         let lastIndex: Int
-        var selected: MenuOption { options[selectedIndex] }
+        var selected: T { options[selectedIndex] }
 
-        init?(options: [MenuOption]) {
+        init?(options: [T]) {
             guard !options.isEmpty else { return nil }
 
             self.options = options
