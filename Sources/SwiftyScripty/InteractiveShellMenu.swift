@@ -1,5 +1,4 @@
 import Foundation
-import SwiftyScripty
 
 //sourcery: AutoMockable, skipMockCreation
 public protocol InteractiveShellMenu {

@@ -200,7 +200,7 @@ extension SwiftyScriptyCLI {
         guard let answer = await interactiveShellMenu.getAnswer(
             message: welcomeMessage,
             given: MenuOptions.allCases
-        ) as? MenuOptions else { return }
+        ) else { return }
 
         shell.print(color: .green, text: "")
         switch answer {
@@ -230,9 +230,7 @@ extension SwiftyScriptyCLI {
         guard let answer = await interactiveShellMenu.getAnswer(
             message: "Would you like to pick another option?",
             given: YesNoOptions.allCases
-        ) as? YesNoOptions else {
-            return false
-        }
+        ) else { return false }
 
         return answer == .yes
     }

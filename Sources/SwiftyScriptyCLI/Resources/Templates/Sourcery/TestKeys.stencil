@@ -20,5 +20,4 @@ extension {{ type.name }}Key: @retroactive InjectionTest {
 
 {% endif %}
 {% endif %}
-{% endif %}
 {% endfor %}
