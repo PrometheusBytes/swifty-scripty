@@ -1,4 +1,3 @@
-{% if not type|annotated:"skipMockCreation" %}
 {% macro swiftifyMethodName name %}{{ name | replace:"(","_" | replace:")","" | replace:":","_" | replace:"`","" | snakeToCamelCase | lowerFirstWord }}{% endmacro %}
 
 {% macro methodThrowableErrorDeclaration method %}
@@ -99,6 +98,7 @@
 {% macro mockedVariableName variable %}{{ variable.name }}{% endmacro %}
 
 {% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}{% if type.name != "AutoMockable" %}
+{% if not type|annotated:"skipMockCreation" %}
 // sourcery:file:{{ type.name }}+AutoMockable
 // swiftlint:disable all
 
@@ -121,5 +121,6 @@ public class {{ type.name }}Mock: {{ type.name }} {
 
 // sourcery:end
 
-{% endif %}{% endfor %}
 {% endif %}
+{% endif %}
+{% endfor %}
