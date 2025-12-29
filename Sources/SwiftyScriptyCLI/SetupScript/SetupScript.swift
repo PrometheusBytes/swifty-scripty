@@ -263,7 +263,7 @@ private extension SetupScriptImpl {
         case .standard: break
         }
 
-        guard mockKeysCommand.succeeded else { throw SetupScriptModels.Errors.generatingMocks }
+        guard mockKeysCommand.succeeded else { throw SetupScriptModels.Errors.generatingMockKeys }
         shell.print(color: .green, text: "✅ Generated Mock Keys")
     }
 }
