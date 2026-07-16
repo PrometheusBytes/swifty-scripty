@@ -63,6 +63,48 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftyScriptyMacros"
+               BuildableName = "SwiftyScriptyMacros"
+               BlueprintName = "SwiftyScriptyMacros"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftyScriptyMacrosClient"
+               BuildableName = "SwiftyScriptyMacrosClient"
+               BlueprintName = "SwiftyScriptyMacrosClient"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftyScriptyExecutable"
+               BuildableName = "SwiftyScriptyExecutable"
+               BlueprintName = "SwiftyScriptyExecutable"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -92,6 +134,16 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SwiftyScriptyMacrosTests"
+               BuildableName = "SwiftyScriptyMacrosTests"
+               BlueprintName = "SwiftyScriptyMacrosTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -108,9 +160,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
+            BlueprintIdentifier = "SwiftyScriptyExecutable"
+            BuildableName = "SwiftyScriptyExecutable"
+            BlueprintName = "SwiftyScriptyExecutable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -134,9 +186,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
+            BlueprintIdentifier = "SwiftyScriptyExecutable"
+            BuildableName = "SwiftyScriptyExecutable"
+            BlueprintName = "SwiftyScriptyExecutable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
