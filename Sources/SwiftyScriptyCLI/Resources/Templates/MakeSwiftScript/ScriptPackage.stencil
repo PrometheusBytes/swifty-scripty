@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -15,7 +15,8 @@ let package = Package(
         .executableTarget(
             name: "{{ argument.scriptName }}",
             dependencies: [
-                .product(name: "SwiftyScripty", package: "swifty-scripty")
+                .product(name: "SwiftyScripty", package: "swifty-scripty"),
+                .product(name: "SwiftyScriptyMacros", package: "swifty-scripty")
             ],
             path: "Sources/{{ argument.scriptName }}"
         ),

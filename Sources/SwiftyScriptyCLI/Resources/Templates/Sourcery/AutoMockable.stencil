@@ -97,7 +97,7 @@
 {% macro underlyingMockedVariableName variable %}underlying{{ variable.name|upperFirstLetter }}{% endmacro %}
 {% macro mockedVariableName variable %}{{ variable.name }}{% endmacro %}
 
-{% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}{% if type.name != "AutoMockable" %}
+{% for type in types.protocols where type|annotated:"Injectable" or type.attributes.Injectable %}
 {% if not type|annotated:"skipMockCreation" %}
 // sourcery:file:{{ type.name }}+AutoMockable
 // swiftlint:disable all
@@ -121,6 +121,5 @@ public class {{ type.name }}Mock: {{ type.name }} {
 
 // sourcery:end
 
-{% endif %}
 {% endif %}
 {% endfor %}

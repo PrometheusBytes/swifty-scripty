@@ -1,5 +1,4 @@
-{% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}
-{% if type.name != "AutoMockable" %}
+{% for type in types.protocols where type|annotated:"Injectable" or type.attributes.Injectable %}
 {% if not type|annotated:"skipMockCreation" %}
 
 // sourcery:file:{{ type.name }}+TestKey.swift
@@ -12,12 +11,11 @@ import {{ argument.scriptName }}
 {% endif %}
 {% endif %}
 
-extension {{ type.name }}Key: @retroactive InjectionTest {
+extension {{ type.name }}DependencyKey: {% if argument.skipRetroactive != "true" %}@retroactive {% endif %}InjectionTest {
     public static var testValue: {{ type.name }} = {{ type.name }}Mock()
 }
 
 // sourcery:end
 
-{% endif %}
 {% endif %}
 {% endfor %}

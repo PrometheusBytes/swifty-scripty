@@ -1,8 +1,9 @@
 import ArgumentParser
 import Foundation
 import SwiftyScripty
+import SwiftyScriptyMacros
 
-//sourcery: AutoMockable
+@Injectable
 public protocol SetupScript {
     func setup(at path: URL, print: PrintType) async throws
     func build(
@@ -12,7 +13,7 @@ public protocol SetupScript {
     ) async throws
 }
 
-extension SetupScript {
+public extension SetupScript {
     func setup(at path: URL) async throws {
         try await setup(at: path, print: .standard)
     }
@@ -26,10 +27,11 @@ struct SetupScriptImpl: SetupScript {
     // MARK: - Constants
 
     enum Constants {
-        static let injectionKeysFolderName = "InjectionKeys"
+        static let injectionKeysFileName = "InjectionKeys.swift"
         static let mocksFolderName = "Mocks"
         static let testKeysFolderName = "TestKeys"
         static let nameArgument = "scriptName"
+        static let skipRetroactiveArgument = "skipRetroactive"
     }
 
     // MARK: - Injected Values
@@ -165,7 +167,7 @@ private extension SetupScriptImpl {
     ) -> SetupScriptModels.PathConfiguration {
         let injectionKeysPath = root
             .appending(path: configuration.injectionKeysPath)
-            .appending(component: Constants.injectionKeysFolderName)
+            .appending(component: Constants.injectionKeysFileName)
         let mocksPath = root
             .appending(path: configuration.mocksPath)
             .appending(component: Constants.mocksFolderName)
@@ -186,6 +188,7 @@ private extension SetupScriptImpl {
         for configuration: SetupScriptModels.ScriptConfiguration
     ) {
         _ = fileUtility.deleteFile(at: paths.injectionKeys)
+        _ = fileUtility.deleteFile(at: paths.injectionKeys.deletingLastPathComponent().appending(component: "InjectionKeys"))
         _ = fileUtility.deleteFile(at: paths.mocks)
         _ = fileUtility.deleteFile(at: paths.testKeys)
     }
@@ -253,7 +256,13 @@ private extension SetupScriptImpl {
             templatePaths: [mockKeysTemplatePath],
             sourcePaths: [paths.sources],
             outputPath: paths.testKeys,
-            args: [SourceryWrapperArguments(key: Constants.nameArgument, value: configuration.scriptName)],
+            args: [
+                SourceryWrapperArguments(key: Constants.nameArgument, value: configuration.scriptName),
+                SourceryWrapperArguments(
+                    key: Constants.skipRetroactiveArgument,
+                    value: configuration.skipRetroactive ? "true" : "false"
+                )
+            ],
             trimSourceryHeader: false
         )
 
