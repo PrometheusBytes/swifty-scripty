@@ -4,6 +4,6 @@
 import Foundation
 import SwiftyScripty
 
-extension SwiftPackageKey: @retroactive InjectionTest {
+extension SwiftPackageDependencyKey: InjectionTest {
     public static var testValue: SwiftPackage = SwiftPackageMock()
 }

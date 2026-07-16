@@ -1,6 +1,8 @@
 import Foundation
+import SwiftyScriptyMacros
 
-//sourcery: AutoMockable, skipMockCreation
+@Injectable
+//sourcery: skipMockCreation
 public protocol InteractiveShellMenu {
   func getAnswer<T: MenuOption>(
         message: String,

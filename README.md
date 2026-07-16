@@ -2,7 +2,7 @@
 
 # Swifty Scripty
 
-SwiftyScripty is a Swift package that enables you to create new scripts using a CLI, and it interacts with various tools such as shell, Git commands, Sourcery, and more. By simply importing and injecting dependencies with Swift code, you can streamline your script creation process.
+SwiftyScripty is a Swift package that enables you to create new scripts using a CLI, and it interacts with various tools such as shell, Git commands, Sourcery, and more. It ships a **macro-based dependency-injection layer** (`@Injectable` / `@Injected`) so scripts can be tested with mocks out of the box.
 
 ## Features
 
@@ -54,7 +54,7 @@ Once installed, you can use the CLI tool to generate and manage your scripts. He
   swiftyscripty --generate <script-name>
   ```
 
-- **Setup Script**: Generates all the mocks and injection keys needed to make injection work. If you create a new protocol and implementation, mark the protocol with the tag `//sourcery:AutoMockable` and name the implementation as the protocol with Impl at the end (e.g., `MyProtocol` and `MyProtocolImpl`), then by running the setup, you will be able to inject your protocol in the script.
+- **Setup Script**: Generates all the mocks and injection keys needed to make injection work. Mark the protocol with `@Injectable` (from `SwiftyScriptyMacros`) and name the implementation as the protocol with `Impl` at the end (e.g., `MyProtocol` and `MyProtocolImpl`). Running setup will produce the mocks and the central `InjectedValues` extension automatically.
 
   ```sh
   swiftyscripty -s
@@ -110,7 +110,9 @@ To set up dependency injection for your script:
 
     ```swift
     // MyProtocol.swift
-    // sourcery:AutoMockable
+    import SwiftyScriptyMacros
+
+    @Injectable
     protocol MyProtocol {
         func doSomething()
     }

@@ -1,10 +1,11 @@
 import Foundation
 import RegexBuilder
+import SwiftyScriptyMacros
 
 // MARK: - Shell Protocol
 
 /// A protocol defining the interface for executing shell commands.
-//sourcery: AutoMockable
+@Injectable
 public protocol Shell {
     /// Executes a shell command and returns the command result.
     ///

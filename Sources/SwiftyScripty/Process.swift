@@ -1,9 +1,10 @@
 import Foundation
+import SwiftyScriptyMacros
 
 // MARK: - ProcessRunner Protocol
 
 /// A protocol modelling a runnable process of the system.
-//sourcery: AutoMockable
+@Injectable
 public protocol ProcessRunner {
     /// Runs the passed command in a new process.
     ///
