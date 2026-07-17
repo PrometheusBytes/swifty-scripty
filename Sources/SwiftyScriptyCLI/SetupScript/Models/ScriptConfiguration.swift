@@ -12,6 +12,7 @@ extension SetupScriptModels {
             case mocksPath = "generated-mocks-path"
             case mockKeysPath = "generated-mock-keys-path"
             case skipBuild = "skip-build"
+            case skipRetroactive = "skip-retroactive"
         }
 
         let scriptName: String
@@ -20,6 +21,7 @@ extension SetupScriptModels {
         let mocksPath: String
         let mockKeysPath: String
         let skipBuild: Bool
+        let skipRetroactive: Bool
 
         public init(from decoder: any Decoder) throws {
             let container: KeyedDecodingContainer<SetupScriptModels.ScriptConfiguration.CodingKeys> = try decoder.container(keyedBy: SetupScriptModels.ScriptConfiguration.CodingKeys.self)
@@ -29,6 +31,7 @@ extension SetupScriptModels {
             self.mocksPath = try container.decode(String.self, forKey: CodingKeys.mocksPath)
             self.mockKeysPath = try container.decode(String.self, forKey: CodingKeys.mockKeysPath)
             self.skipBuild = (try? container.decode(Bool.self, forKey: CodingKeys.skipBuild)) ?? false
+            self.skipRetroactive = (try? container.decode(Bool.self, forKey: CodingKeys.skipRetroactive)) ?? false
         }
     }
 }

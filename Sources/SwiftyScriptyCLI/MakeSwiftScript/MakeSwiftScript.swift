@@ -1,7 +1,8 @@
 import Foundation
 import SwiftyScripty
+import SwiftyScriptyMacros
 
-//sourcery: AutoMockable
+@Injectable
 public protocol MakeSwiftScript {
     func createScript(with name: String, at path: URL, print: PrintType) async throws
 }

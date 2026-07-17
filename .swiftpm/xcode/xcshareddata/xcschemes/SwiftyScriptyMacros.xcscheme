@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SwiftyScriptyApp"
-               BuildableName = "SwiftyScriptyApp"
-               BlueprintName = "SwiftyScriptyApp"
+               BlueprintIdentifier = "SwiftyScriptyMacros"
+               BuildableName = "SwiftyScriptyMacros"
+               BlueprintName = "SwiftyScriptyMacros"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,29 +34,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SwiftyScriptyCLITests"
-               BuildableName = "SwiftyScriptyCLITests"
-               BlueprintName = "SwiftyScriptyCLITests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "SwiftyScriptyMacrosTests"
                BuildableName = "SwiftyScriptyMacrosTests"
                BlueprintName = "SwiftyScriptyMacrosTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SwiftyScriptyTests"
-               BuildableName = "SwiftyScriptyTests"
-               BlueprintName = "SwiftyScriptyTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -72,16 +52,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
-            ReferencedContainer = "container:">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -89,16 +59,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
-            ReferencedContainer = "container:">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -19,7 +19,7 @@ build-app:
 
 cli:
 	@make build
-	@sudo cp -f .build/release/SwiftyScriptyCLI /usr/local/bin/swiftyscripty
+	@sudo cp -f .build/release/SwiftyScriptyExecutable /usr/local/bin/swiftyscripty
 
 remove-cli:
 	@sudo rm /usr/local/bin/swiftyscripty

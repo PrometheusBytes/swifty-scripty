@@ -6,14 +6,16 @@
             "generated-injection-keys-path": "./Sources/SwiftyScripty/Generated",
             "generated-mocks-path": "./Mocks/SwiftyScripty/Generated",
             "generated-mock-keys-path": "./Mocks/SwiftyScripty/Generated",
-            "skip-build": true
+            "skip-build": true,
+            "skip-retroactive": true
         },
         {
             "name": "SwiftyScriptyCLI",
             "sources": "./Sources/SwiftyScriptyCLI",
             "generated-injection-keys-path": "./Sources/SwiftyScriptyCLI/Generated",
             "generated-mocks-path": "./Mocks/SwiftyScriptyCLI/Generated",
-            "generated-mock-keys-path": "./Mocks/SwiftyScriptyCLI/Generated"
+            "generated-mock-keys-path": "./Mocks/SwiftyScriptyCLI/Generated",
+            "skip-retroactive": true
         }
     ]
 }

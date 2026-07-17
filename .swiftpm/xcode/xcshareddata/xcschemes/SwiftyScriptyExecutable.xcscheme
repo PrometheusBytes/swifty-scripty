@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SwiftyScriptyApp"
-               BuildableName = "SwiftyScriptyApp"
-               BlueprintName = "SwiftyScriptyApp"
+               BlueprintIdentifier = "SwiftyScriptyExecutable"
+               BuildableName = "SwiftyScriptyExecutable"
+               BlueprintName = "SwiftyScriptyExecutable"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -76,9 +76,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
+            BlueprintIdentifier = "SwiftyScriptyExecutable"
+            BuildableName = "SwiftyScriptyExecutable"
+            BlueprintName = "SwiftyScriptyExecutable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -93,9 +93,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SwiftyScriptyApp"
-            BuildableName = "SwiftyScriptyApp"
-            BlueprintName = "SwiftyScriptyApp"
+            BlueprintIdentifier = "SwiftyScriptyExecutable"
+            BuildableName = "SwiftyScriptyExecutable"
+            BlueprintName = "SwiftyScriptyExecutable"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>

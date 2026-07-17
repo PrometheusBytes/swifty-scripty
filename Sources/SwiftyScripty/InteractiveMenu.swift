@@ -1,6 +1,7 @@
 import Foundation
+import SwiftyScriptyMacros
 
-//sourcery: AutoMockable
+@Injectable
 public protocol InteractiveMenu {
     func showMenu(for options: [String], title: String) async -> String?
 }

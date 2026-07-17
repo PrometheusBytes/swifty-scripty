@@ -1,25 +1,12 @@
-{% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}
-{% if type.name != "AutoMockable" %}
-{% if not type|annotated:"skipKeyCreation" %}
-
-// sourcery:file:{{ type.name }}+InjectionKey.swift
+// Generated using Sourcery — DO NOT EDIT
 // swiftlint:disable all
 {% if argument.scriptName != "SwiftyScripty" %}
 import SwiftyScripty
-
 {% endif %}
-public struct {{ type.name }}Key: InjectionKey {
-    public static var liveValue: {{ type.name }} { {{ type.name }}Impl() }
-}
+import SwiftyScriptyMacros
 
 extension InjectedValues {
-    public var {{ type.name | lowerFirstWord }}: {{ type.name }} {
-        get { return Self[{{ type.name }}Key.self] }
-    }
-}
-
-// sourcery:end
-
-{% endif %}
-{% endif %}
+{% for type in types.protocols where type|annotated:"Injectable" or type.attributes.Injectable %}
+    #injected({{ type.name }}.self, accessLevel: "{{ type.accessLevel }}")
 {% endfor %}
+}

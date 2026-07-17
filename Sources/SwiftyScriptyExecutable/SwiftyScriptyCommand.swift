@@ -1,15 +1,10 @@
 import Foundation
-import SwiftyScripty
 import ArgumentParser
-
-public enum PrintType {
-    case verbose
-    case interactive
-    case standard
-}
+import SwiftyScripty
+import SwiftyScriptyCLI
 
 @main
-struct SwiftyScriptyCLI: AsyncParsableCommand {
+struct SwiftyScriptyCommand: AsyncParsableCommand {
     enum CodingKeys: CodingKey {
         case generate
         case setup
@@ -24,19 +19,19 @@ struct SwiftyScriptyCLI: AsyncParsableCommand {
         help: ArgumentHelp(
             "Generates new script",
             discussion: """
-            
+
             A Command used to generate a new script
             Example:
-            
+
             SwiftyScripty -g <ScriptName>
-            
+
             Will generate a script with that name inside the current folder
             """,
             valueName: "Script Name"
         )
     )
     var generate: String?
-    
+
     @Flag(name: .shortAndLong, help: "Pass the parameter to setup the script in the current folder")
     var setup: Bool = false
 
@@ -48,7 +43,7 @@ struct SwiftyScriptyCLI: AsyncParsableCommand {
 
     // MARK: - Properties
 
-    @Injected(\.setupScript) var setupScript: SetupScript    
+    @Injected(\.setupScript) var setupScript: SetupScript
     @Injected(\.shell) var shell: Shell
     @Injected(\.fileUtility) var fileUtility: FileUtility
     @Injected(\.interactiveShellMenu) var interactiveShellMenu: InteractiveShellMenu
@@ -58,13 +53,13 @@ struct SwiftyScriptyCLI: AsyncParsableCommand {
 
     mutating func run() async throws {
         let currentPath = await shell.run(command: "pwd", shellType: .zsh)
-        
+
         guard currentPath.succeeded else {
             print("ERROR: Current path not found")
             shell.exit(with: .errorExitCode)
             return
         }
-        
+
         let url = URL(filePath: currentPath.output)
 
         if configuration.isInteractive {
@@ -77,7 +72,7 @@ struct SwiftyScriptyCLI: AsyncParsableCommand {
 
 // MARK: - Configuration
 
-private extension SwiftyScriptyCLI {
+private extension SwiftyScriptyCommand {
     enum Configuration {
         case setup
         case build
@@ -107,7 +102,7 @@ private extension SwiftyScriptyCLI {
 
 // MARK: - Interactive Menu
 
-extension SwiftyScriptyCLI {
+extension SwiftyScriptyCommand {
     enum MenuOptions: String, CaseIterable, MenuOption {
         case buildScript = "Build Script"
         case setupScript = "Setup Script"
@@ -238,7 +233,7 @@ extension SwiftyScriptyCLI {
 
 // MARK: - Standard Functions
 
-private extension SwiftyScriptyCLI {
+private extension SwiftyScriptyCommand {
     func runStandard(for configuration: Configuration, and url: URL) async {
         switch configuration {
         case .setup:
